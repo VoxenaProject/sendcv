@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 const STATUSES = [
-  { value: "generated", label: "Generee", color: "bg-primary/10 text-primary border-primary/20" },
-  { value: "applied", label: "Postule", color: "bg-accent/10 text-accent border-accent/20" },
+  { value: "generated", label: "Générée", color: "bg-primary/10 text-primary border-primary/20" },
+  { value: "applied", label: "Postulé", color: "bg-accent/10 text-accent border-accent/20" },
   { value: "interview", label: "Entretien", color: "bg-success/10 text-success border-success/20" },
-  { value: "rejected", label: "Refuse", color: "bg-danger/10 text-danger border-danger/20" },
-  { value: "hired", label: "Embauche !", color: "bg-success/10 text-success border-success/20" },
+  { value: "rejected", label: "Refusé", color: "bg-danger/10 text-danger border-danger/20" },
+  { value: "hired", label: "Embauché !", color: "bg-success/10 text-success border-success/20" },
 ];
 
 export function StatusManager({ applicationId, currentStatus }: { applicationId: string; currentStatus: string }) {

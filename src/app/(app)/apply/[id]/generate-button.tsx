@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 
 const STEPS = [
   "Analyse du profil...",
-  "Generation du CV sur-mesure...",
-  "Redaction de la lettre de motivation...",
-  "Preparation des questions d'entretien...",
+  "Génération du CV sur-mesure...",
+  "Rédaction de la lettre de motivation...",
+  "Préparation des questions d'entretien...",
   "Optimisation LinkedIn...",
   "Finalisation...",
 ];
@@ -40,7 +40,7 @@ export function GenerateButton({ applicationId }: { applicationId: string }) {
     if (!response.ok) {
       if (data.code === "NO_CREDITS") { router.push("/pricing"); return; }
       if (data.code === "PROFILE_INCOMPLETE") { router.push("/settings"); return; }
-      setError(data.error || "Erreur lors de la generation");
+      setError(data.error || "Erreur lors de la génération");
       setLoading(false);
       return;
     }
@@ -75,7 +75,7 @@ export function GenerateButton({ applicationId }: { applicationId: string }) {
         onClick={handleGenerate}
         className="bg-primary text-white px-8 py-3.5 rounded-xl font-bold text-base hover:bg-primary-dark transition-all shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
       >
-        Generer ma candidature (1 credit)
+        Générer ma candidature (1 crédit)
       </button>
       {error && <p className="text-sm text-danger">{error}</p>}
     </div>

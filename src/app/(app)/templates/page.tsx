@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { CVTemplateEngine, PRESETS, PALETTES, PALETTE_KEYS, type PaletteKey } from "@/components/cv-templates/engine";
 import type { StructuredCV } from "@/types";
 import Link from "next/link";
@@ -52,17 +52,32 @@ const DEMO_CV: StructuredCV = {
 };
 
 const PROFESSIONS = [
-  { label: "Tech & Développement", templates: ["moderne", "tech", "compact"] },
-  { label: "Finance & Conseil", templates: ["corporate", "executive", "classique"] },
-  { label: "Marketing & Créatif", templates: ["creatif", "sidebar-pro", "impact"] },
-  { label: "Direction & Management", templates: ["executive", "classique", "corporate"] },
-  { label: "Polyvalent", templates: ["minimal", "moderne", "sidebar-pro"] },
+  { label: "Tech & Développement", templates: ["neon", "terminal", "grid"] },
+  { label: "Finance & Conseil", templates: ["structure", "prestige", "elegant"] },
+  { label: "Marketing & Créatif", templates: ["bold", "duo", "epure"] },
+  { label: "Direction & Management", templates: ["prestige", "elegant", "structure"] },
+  { label: "Polyvalent", templates: ["duo", "timeline", "neon"] },
 ];
 
 export default function TemplatesGalleryPage() {
   const [selectedPreset, setSelectedPreset] = useState(PRESETS[0]);
   const [palette, setPalette] = useState<PaletteKey>("indigo");
   const [filter, setFilter] = useState<string | null>(null);
+  const [downloading, setDownloading] = useState(false);
+  const previewRef = useRef<HTMLDivElement>(null);
+
+  async function handleDownloadPDF() {
+    if (!previewRef.current) return;
+    setDownloading(true);
+    const html2pdf = (await import("html2pdf.js")).default;
+    await html2pdf().set({
+      margin: 0, filename: `CV_Template_${selectedPreset.name}.pdf`,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+    }).from(previewRef.current).save();
+    setDownloading(false);
+  }
 
   const filteredPresets = filter
     ? PRESETS.filter((p) => PROFESSIONS.find((pr) => pr.label === filter)?.templates.includes(p.key))
@@ -145,14 +160,22 @@ export default function TemplatesGalleryPage() {
             ))}
           </div>
 
-          {/* CTA */}
-          <Link href="/apply" className="block w-full py-3 rounded-xl bg-indigo-600 text-white font-bold text-sm text-center hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-600/15">
-            Utiliser ce template — Analyser une offre
-          </Link>
+          {/* CTAs */}
+          <div className="flex gap-2">
+            <Link href="/apply" className="flex-1 py-3 rounded-xl bg-indigo-600 text-white font-bold text-sm text-center hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-600/15">
+              Utiliser ce template
+            </Link>
+            <button onClick={handleDownloadPDF} disabled={downloading}
+              className="px-5 py-3 rounded-xl bg-gray-100 text-gray-700 font-semibold text-sm hover:bg-gray-200 transition-colors cursor-pointer disabled:opacity-50">
+              {downloading ? "..." : "📥 PDF"}
+            </button>
+          </div>
 
           {/* Preview frame */}
           <div className="border border-gray-200 rounded-xl overflow-hidden shadow-xl" style={{ maxHeight: "700px", overflowY: "auto" }}>
-            <CVTemplateEngine cv={DEMO_CV} preset={selectedPreset} palette={palette} />
+            <div ref={previewRef}>
+              <CVTemplateEngine cv={DEMO_CV} preset={selectedPreset} palette={palette} />
+            </div>
           </div>
         </div>
       </div>
