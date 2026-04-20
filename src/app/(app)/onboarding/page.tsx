@@ -93,7 +93,7 @@ export default function OnboardingPage() {
       languages: langsText || null,
     }).eq("id", user.id);
 
-    router.push("/dashboard");
+    router.push("/onboarding/preview");
     router.refresh();
   }
 
