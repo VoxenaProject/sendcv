@@ -12,7 +12,7 @@ const NAV_ITEMS = [
 ];
 
 // ━━━ Desktop Nav ━━━
-export function DesktopNav({ credits, name }: { credits: number; name: string }) {
+export function DesktopNav({ plan, name }: { plan: "free" | "pro" | "lifetime"; name: string }) {
   const pathname = usePathname();
 
   return (
@@ -41,9 +41,12 @@ export function DesktopNav({ credits, name }: { credits: number; name: string })
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <Link href="/pricing" className="flex items-center gap-1.5 text-xs bg-indigo-50 px-3 py-1.5 rounded-full font-bold text-indigo-600 border border-indigo-100 hover:bg-indigo-100 transition-colors">
-            <CreditIcon size={13} active={false} />
-            {credits}
+          <Link href="/pricing" className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full font-bold border transition-colors ${
+            plan === "free" ? "bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100" :
+            plan === "pro" ? "bg-indigo-50 text-indigo-600 border-indigo-100" :
+            "bg-emerald-50 text-emerald-600 border-emerald-100"
+          }`}>
+            {plan === "free" ? "Free" : plan === "pro" ? "Pro ✓" : "Lifetime ✓"}
           </Link>
           <Link href="/settings" className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white text-xs font-bold hover:scale-105 transition-transform">
             {name.charAt(0).toUpperCase()}
@@ -55,7 +58,7 @@ export function DesktopNav({ credits, name }: { credits: number; name: string })
 }
 
 // ━━━ Mobile Bottom Nav (app-like) ━━━
-export function MobileNav({ credits }: { credits: number }) {
+export function MobileNav({ plan }: { plan: "free" | "pro" | "lifetime" }) {
   const pathname = usePathname();
 
   return (
@@ -80,7 +83,7 @@ export function MobileNav({ credits }: { credits: number }) {
                 <item.icon size={20} active={active} />
               )}
               <span className={`text-[10px] font-medium ${item.href === "/apply" ? "-mt-0.5" : ""}`}>
-                {item.href === "/pricing" ? `${credits}` : item.label}
+                {item.href === "/pricing" ? (plan === "free" ? "Upgrade" : plan === "pro" ? "Pro" : "∞") : item.label}
               </span>
             </Link>
           );

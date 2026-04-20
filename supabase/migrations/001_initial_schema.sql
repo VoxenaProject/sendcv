@@ -5,6 +5,9 @@ CREATE TABLE public.profiles (
   email TEXT NOT NULL,
   full_name TEXT NOT NULL DEFAULT '',
   credits INTEGER NOT NULL DEFAULT 0,
+  plan TEXT NOT NULL DEFAULT 'free' CHECK (plan IN ('free', 'pro', 'lifetime')),
+  free_generation_used BOOLEAN NOT NULL DEFAULT FALSE,
+  generation_count INTEGER NOT NULL DEFAULT 0,
   -- Profil candidat (rempli au premier usage)
   headline TEXT,
   experience TEXT,

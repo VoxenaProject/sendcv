@@ -22,8 +22,15 @@ export async function POST(request: Request) {
   if (!profile) return Response.json({ error: "Profile not found" }, { status: 404 });
   if (!application) return Response.json({ error: "Application not found" }, { status: 404 });
   if (application.status === "generated") return Response.json({ error: "Already generated" }, { status: 400 });
-  if (profile.credits < 1) return Response.json({ error: "No credits", code: "NO_CREDITS" }, { status: 402 });
   if (!profile.experience?.trim()) return Response.json({ error: "Profile incomplete", code: "PROFILE_INCOMPLETE" }, { status: 400 });
+
+  // Vérifier le droit de générer
+  const plan = (profile as unknown as { plan: string }).plan || "free";
+  const freeUsed = (profile as unknown as { free_generation_used: boolean }).free_generation_used || false;
+
+  if (plan === "free" && freeUsed) {
+    return Response.json({ error: "Free generation used", code: "UPGRADE_REQUIRED" }, { status: 402 });
+  }
 
   const anthropic = getAnthropicClient();
 
@@ -89,10 +96,14 @@ export async function POST(request: Request) {
     status: "generated",
   }).eq("id", applicationId);
 
-  // Déduire 1 crédit
-  await supabase.from("profiles").update({ credits: profile.credits - 1 }).eq("id", user.id);
+  // Tracker l'usage
+  const genCount = ((profile as unknown as { generation_count: number }).generation_count || 0) + 1;
+  const updateData: Record<string, unknown> = { generation_count: genCount };
+  if (plan === "free") updateData.free_generation_used = true;
 
-  // Log transaction
+  await supabase.from("profiles").update(updateData).eq("id", user.id);
+
+  // Log
   await supabase.from("credit_transactions").insert({
     user_id: user.id,
     amount: -1,

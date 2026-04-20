@@ -14,14 +14,16 @@ export default async function ApplicationDetailPage(props: { params: Promise<{ i
 
   const [appRes, profileRes] = await Promise.all([
     supabase.from("applications").select("*").eq("id", id).eq("user_id", user.id).single(),
-    supabase.from("profiles").select("credits, experience").eq("id", user.id).single(),
+    supabase.from("profiles").select("plan, free_generation_used, experience").eq("id", user.id).single(),
   ]);
 
   if (!appRes.data) notFound();
   const app = appRes.data as unknown as Application;
-  const profile = profileRes.data as unknown as Pick<Profile, "credits" | "experience"> | null;
-  const credits = profile?.credits ?? 0;
+  const profile = profileRes.data as unknown as { plan: string; free_generation_used: boolean; experience: string | null } | null;
+  const plan = profile?.plan || "free";
+  const freeUsed = profile?.free_generation_used || false;
   const hasProfile = !!profile?.experience?.trim();
+  const canGenerate = plan !== "free" || !freeUsed;
   const a = app.analysis;
 
   return (
@@ -206,7 +208,14 @@ export default async function ApplicationDetailPage(props: { params: Promise<{ i
             <span className="bg-white border border-gray-200 px-3 py-1.5 rounded-full">🔗 LinkedIn optimisé</span>
           </div>
 
-          <p className="text-sm font-mono font-bold text-indigo-600">1 crédit — {credits} disponible{credits !== 1 ? "s" : ""}</p>
+          {plan === "free" && !freeUsed && (
+            <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 px-4 py-2 rounded-full">
+              <span className="text-emerald-600 text-xs font-bold">🎁 1ère génération gratuite</span>
+            </div>
+          )}
+          {plan !== "free" && (
+            <p className="text-sm font-medium text-indigo-600">{plan === "pro" ? "Pro — Illimité" : "Lifetime — Illimité"}</p>
+          )}
 
           {!hasProfile && (
             <div className="bg-amber-50 border border-amber-200 p-4 rounded-xl text-sm max-w-md mx-auto">
@@ -218,9 +227,9 @@ export default async function ApplicationDetailPage(props: { params: Promise<{ i
             </div>
           )}
 
-          {credits < 1 ? (
+          {!canGenerate ? (
             <Link href="/pricing" className="inline-block bg-indigo-600 text-white px-8 py-3.5 rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20">
-              Acheter des crédits
+              Passer à Pro pour continuer
             </Link>
           ) : hasProfile ? (
             <GenerateButton applicationId={app.id} />

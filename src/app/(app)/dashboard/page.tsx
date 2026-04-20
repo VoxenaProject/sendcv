@@ -43,7 +43,7 @@ export default async function DashboardPage() {
         </div>
 
         <div className="relative grid grid-cols-4 gap-3 mt-6">
-          <MiniStat value={profile.credits} label="Crédits" />
+          <PlanBadge plan={(profile as unknown as { plan: string }).plan || "free"} />
           <MiniStat value={apps.length} label="Analysées" />
           <MiniStat value={generated} label="Générées" />
           <MiniStat value={interviews} label="Entretiens" />
@@ -54,18 +54,18 @@ export default async function DashboardPage() {
       <div className="grid grid-cols-3 gap-3">
         <QuickAction href="/apply" icon="📝" label="Nouvelle candidature" desc="Colle une offre" />
         <QuickAction href="/templates" icon="🎨" label="Templates CV" desc="50 combinaisons" />
-        <QuickAction href="/pricing" icon="💎" label="Crédits" desc={`${profile.credits} restant${profile.credits > 1 ? "s" : ""}`} />
+        <QuickAction href="/pricing" icon="💎" label="Mon plan" desc={(profile as unknown as { plan: string }).plan === "free" ? "Upgrade" : (profile as unknown as { plan: string }).plan === "pro" ? "Pro actif" : "Lifetime ∞"} />
       </div>
 
       {/* ━━━ Credits alert ━━━ */}
-      {profile.credits === 0 && (
-        <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
-          <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center shrink-0"><span className="text-lg">💎</span></div>
+      {(profile as unknown as { plan: string }).plan === "free" && (profile as unknown as { free_generation_used: boolean }).free_generation_used && (
+        <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-200">
+          <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center shrink-0"><span className="text-lg">⚡</span></div>
           <div className="flex-1">
-            <p className="font-bold text-sm text-amber-900">Plus de crédits</p>
-            <p className="text-xs text-amber-700">Achète un pack pour continuer à générer.</p>
+            <p className="font-bold text-sm text-indigo-800">Passe à Pro pour continuer</p>
+            <p className="text-xs text-indigo-600">Ta génération gratuite est utilisée. Upgrade pour l&apos;illimité.</p>
           </div>
-          <Link href="/pricing" className="text-xs bg-amber-500 text-white px-4 py-2 rounded-xl font-bold shrink-0">Acheter</Link>
+          <Link href="/pricing" className="text-xs bg-indigo-600 text-white px-4 py-2 rounded-xl font-bold shrink-0 shadow shadow-indigo-600/20">Upgrade</Link>
         </div>
       )}
 
@@ -91,6 +91,16 @@ export default async function DashboardPage() {
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+function PlanBadge({ plan }: { plan: string }) {
+  const label = plan === "pro" ? "Pro" : plan === "lifetime" ? "Lifetime" : "Free";
+  return (
+    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 text-center">
+      <p className="text-lg font-extrabold">{label}</p>
+      <p className="text-[10px] text-indigo-200 mt-0.5">Plan</p>
     </div>
   );
 }

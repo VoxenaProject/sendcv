@@ -38,7 +38,7 @@ export function GenerateButton({ applicationId }: { applicationId: string }) {
     const data = await response.json();
 
     if (!response.ok) {
-      if (data.code === "NO_CREDITS") { router.push("/pricing"); return; }
+      if (data.code === "NO_CREDITS" || data.code === "UPGRADE_REQUIRED") { router.push("/pricing"); return; }
       if (data.code === "PROFILE_INCOMPLETE") { router.push("/settings"); return; }
       setError(data.error || "Erreur lors de la génération");
       setLoading(false);

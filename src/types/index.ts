@@ -3,6 +3,9 @@ export interface Profile {
   email: string;
   full_name: string;
   credits: number;
+  plan: PlanType;
+  free_generation_used: boolean;
+  generation_count: number;
   headline: string | null;
   experience: string | null;
   education: string | null;
@@ -144,10 +147,33 @@ export interface CreditTransaction {
   created_at: string;
 }
 
-export const CREDIT_PACKS = {
-  starter: { credits: 3, price: 1900, label: "Starter", priceDisplay: "19€" },
-  pro: { credits: 10, price: 4900, label: "Pro", priceDisplay: "49€" },
-  ultra: { credits: 30, price: 9900, label: "Ultra", priceDisplay: "99€" },
-} as const;
+// ━━━ Subscription model ━━━
 
-export type PackKey = keyof typeof CREDIT_PACKS;
+export type PlanType = "free" | "pro" | "lifetime";
+
+export const PLANS = {
+  free: {
+    name: "Free",
+    price: 0,
+    priceDisplay: "0€",
+    description: "Analyses illimitées + 1 génération gratuite",
+    maxGenerations: 1,
+    features: ["Analyses illimitées", "1 génération complète offerte", "10 templates", "Export PDF"],
+  },
+  pro: {
+    name: "Pro",
+    price: 1900, // centimes
+    priceDisplay: "19€/mois",
+    description: "Tout illimité",
+    maxGenerations: Infinity,
+    features: ["Générations illimitées", "50 templates × 5 couleurs", "Double scoring ATS + Recruteur", "Export PDF illimité", "Support prioritaire"],
+  },
+  lifetime: {
+    name: "Lifetime",
+    price: 7900,
+    priceDisplay: "79€",
+    description: "Tout illimité, pour toujours",
+    maxGenerations: Infinity,
+    features: ["Tout ce que Pro inclut", "Paiement unique", "Accès à vie", "Futures fonctionnalités incluses"],
+  },
+} as const;
