@@ -18,12 +18,20 @@ export default function SignupPage() {
     setError(null);
     setLoading(true);
     const supabase = createClient();
-    const { error } = await supabase.auth.signUp({
+    const { error: signUpError } = await supabase.auth.signUp({
       email, password,
-      options: { data: { full_name: fullName, email } },
+      options: {
+        data: { full_name: fullName, email },
+        emailRedirectTo: `${window.location.origin}/callback`,
+      },
     });
-    if (error) { setError(error.message); setLoading(false); return; }
-    router.push("/dashboard");
+    if (signUpError) { setError(signUpError.message); setLoading(false); return; }
+
+    // Auto-login après signup
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+    if (signInError) { setError(signInError.message); setLoading(false); return; }
+
+    router.push("/onboarding");
     router.refresh();
   }
 
