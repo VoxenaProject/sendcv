@@ -20,7 +20,7 @@ export async function updateSession(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
   const isAuthPage = request.nextUrl.pathname.startsWith("/login") || request.nextUrl.pathname.startsWith("/signup");
-  const isAppPage = request.nextUrl.pathname.startsWith("/dashboard") || request.nextUrl.pathname.startsWith("/apply") || request.nextUrl.pathname.startsWith("/pricing") || request.nextUrl.pathname.startsWith("/settings") || request.nextUrl.pathname.startsWith("/templates");
+  const isAppPage = request.nextUrl.pathname.startsWith("/dashboard") || request.nextUrl.pathname.startsWith("/apply") || request.nextUrl.pathname.startsWith("/pricing") || request.nextUrl.pathname.startsWith("/settings") || request.nextUrl.pathname.startsWith("/templates") || request.nextUrl.pathname.startsWith("/onboarding");
 
   if (!user && isAppPage) {
     const url = request.nextUrl.clone();
