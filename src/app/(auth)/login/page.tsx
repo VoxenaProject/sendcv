@@ -27,7 +27,7 @@ export default function LoginPage() {
 
   async function handleReset(e: React.FormEvent) {
     e.preventDefault();
-    if (!email) { setError("Entre ton email d'abord."); return; }
+    if (!email) { setError("Renseigne ton email d'abord."); return; }
     setError(null);
     setLoading(true);
     const supabase = createClient();

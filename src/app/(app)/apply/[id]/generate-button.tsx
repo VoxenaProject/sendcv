@@ -52,19 +52,19 @@ export function GenerateButton({ applicationId }: { applicationId: string }) {
     return (
       <div className="space-y-3 py-2">
         <div className="flex items-center justify-center gap-3">
-          <svg className="animate-spin h-5 w-5 text-primary" viewBox="0 0 24 24">
+          <svg className="animate-spin h-5 w-5 text-indigo-600" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
-          <span className="text-sm font-medium text-primary">{STEPS[step]}</span>
+          <span className="text-sm font-medium text-indigo-600">{STEPS[step]}</span>
         </div>
-        <div className="w-full bg-border rounded-full h-1.5 max-w-xs mx-auto">
+        <div className="w-full bg-gray-100 rounded-full h-1.5 max-w-xs mx-auto">
           <div
-            className="bg-primary h-1.5 rounded-full transition-all duration-1000"
+            className="bg-indigo-600 h-1.5 rounded-full transition-all duration-1000"
             style={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
           />
         </div>
-        <p className="text-xs text-muted text-center">Claude Opus 4.7 travaille pour vous. ~30-60 secondes.</p>
+        <p className="text-xs text-gray-400 text-center">Claude Opus 4.7 travaille pour vous. ~30-60 secondes.</p>
       </div>
     );
   }
@@ -73,11 +73,11 @@ export function GenerateButton({ applicationId }: { applicationId: string }) {
     <div className="space-y-2">
       <button
         onClick={handleGenerate}
-        className="bg-primary text-white px-8 py-3.5 rounded-xl font-bold text-base hover:bg-primary-dark transition-all shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+        className="bg-indigo-600 text-white px-8 py-3.5 rounded-xl font-bold text-base hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
       >
-        Générer ma candidature (1 crédit)
+        Générer ma candidature
       </button>
-      {error && <p className="text-sm text-danger">{error}</p>}
+      {error && <p className="text-sm text-red-600">{error}</p>}
     </div>
   );
 }

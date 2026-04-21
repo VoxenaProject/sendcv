@@ -23,12 +23,16 @@ export async function POST(request: Request) {
     const plan = session.metadata?.plan;
 
     if (userId && plan) {
-      await supabase.from("profiles").update({
-        plan,
-        subscription_id: session.subscription as string || null,
-        subscription_status: "active",
-        stripe_customer_id: session.customer as string || null,
-      }).eq("id", userId);
+      // Vérifier que le user existe avant de mettre à jour
+      const { data: existing } = await supabase.from("profiles").select("id").eq("id", userId).single();
+      if (existing) {
+        await supabase.from("profiles").update({
+          plan,
+          subscription_id: session.subscription as string || null,
+          subscription_status: "active",
+          stripe_customer_id: session.customer as string || null,
+        }).eq("id", userId);
+      }
     }
   }
 
