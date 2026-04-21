@@ -17,15 +17,14 @@ const fu = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transit
 const st = { visible: { transition: { staggerChildren: 0.07 } } } as const;
 
 export default function Landing() {
-  const [typed, setTyped] = useState("");
-  const txt = "Nous recherchons un Développeur Full-Stack Senior (React/Node.js) pour notre équipe tech à Bruxelles. Contrat CDI, 3 à 5 ans d'expérience requis. Maîtrise TypeScript, PostgreSQL. Français et anglais courants exigés. Package salarial attractif + avantages...";
-  useEffect(() => { let i = 0; const t = setInterval(() => { setTyped(txt.slice(0, i)); i++; if (i > txt.length) clearInterval(t); }, 25); return () => clearInterval(t); }, []);
-  const c1 = useCounter(60); const c2 = useCounter(5);
+  const c1 = useCounter(59);
+  const c2 = useCounter(22);
+  const c3 = useCounter(3);
 
   return (
     <div className="min-h-screen bg-white text-[#0f172a]">
 
-      {/* ━━━ NAV ━━━ */}
+      {/* NAV */}
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-baseline gap-0.5">
@@ -34,7 +33,7 @@ export default function Landing() {
             <span className="text-[9px] text-gray-300 font-semibold">.ai</span>
           </Link>
           <div className="flex items-center gap-2">
-            <Link href="/login" className="hidden sm:block text-sm text-gray-500 hover:text-gray-900 px-3 py-2 transition-colors">Se connecter</Link>
+            <Link href="/login" className="hidden sm:block text-sm text-gray-500 hover:text-gray-900 px-3 py-2">Connexion</Link>
             <Link href="/signup" className="text-sm font-semibold bg-indigo-600 text-white px-5 py-2.5 rounded-lg hover:bg-indigo-700 transition-all shadow-sm shadow-indigo-600/20">
               Commencer gratuitement
             </Link>
@@ -42,113 +41,130 @@ export default function Landing() {
         </div>
       </nav>
 
-      {/* ━━━ 1. HERO ━━━ */}
-      <section className="px-6 pt-20 pb-8 md:pt-28 md:pb-12">
+      {/* ━━━ HERO — PAIN FIRST ━━━ */}
+      <section className="px-6 pt-16 pb-6 md:pt-24 md:pb-10">
         <div className="max-w-3xl mx-auto text-center">
           <motion.div initial="hidden" animate="visible" variants={st}>
-            <motion.div variants={fu} className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-full px-4 py-1.5 mb-8">
-              <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-              <span className="text-xs font-semibold text-emerald-700">Entretien en 30 jours ou 100% remboursé</span>
+            <motion.div variants={fu} className="inline-flex items-center gap-2 bg-red-50 border border-red-200 rounded-full px-4 py-1.5 mb-8">
+              <span className="text-xs font-semibold text-red-700">59% de tes candidatures ne sont jamais vues par un humain</span>
             </motion.div>
+
             <motion.h1 variants={fu} className="text-[2.75rem] sm:text-[3.25rem] md:text-[3.75rem] font-extrabold leading-[1.08] tracking-tight">
-              La candidature parfaite.
+              Arrête d&apos;envoyer
               <br />
-              <span className="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">En 60 secondes.</span>
+              <span className="text-red-500 line-through decoration-red-300/50">le même CV partout</span>
             </motion.h1>
-            <motion.p variants={fu} className="mt-6 text-[17px] md:text-lg text-gray-500 max-w-xl mx-auto leading-relaxed">
-              Colle une offre d&apos;emploi. L&apos;IA analyse le poste et génère ton CV sur-mesure, ta lettre de motivation et ta préparation d&apos;entretien. Tout personnalisé pour <strong className="text-gray-700">ce</strong> poste.
+
+            <motion.p variants={fu} className="mt-6 text-xl md:text-2xl font-bold text-gray-800">
+              SendCV personnalise <span className="text-indigo-600 underline decoration-indigo-300 underline-offset-4">chaque candidature</span> en 60 secondes.
             </motion.p>
-            <motion.div variants={fu} className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Link href="/signup" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-indigo-600 text-white px-8 py-4 rounded-xl font-semibold text-[15px] hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20 hover:shadow-xl hover:-translate-y-0.5">
-                Analyser une offre gratuitement
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+
+            <motion.p variants={fu} className="mt-4 text-base text-gray-500 max-w-xl mx-auto leading-relaxed">
+              Colle une offre. L&apos;IA génère ton CV sur-mesure, ta lettre de motivation et ta préparation d&apos;entretien — optimisés pour passer les filtres automatiques ET convaincre le recruteur.
+            </motion.p>
+
+            <motion.div variants={fu} className="mt-8">
+              <Link href="/signup" className="inline-flex items-center justify-center gap-2 bg-indigo-600 text-white px-8 py-4 rounded-xl font-bold text-[15px] hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-600/20 hover:-translate-y-0.5">
+                3 candidatures gratuites — Créer mon compte
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
               </Link>
+              <p className="mt-3 text-xs text-gray-400">Pas de carte bancaire. 3 candidatures complètes offertes.</p>
             </motion.div>
-            <motion.p variants={fu} className="mt-3 text-xs text-gray-400">Analyse gratuite — pas de carte bancaire requise</motion.p>
           </motion.div>
         </div>
       </section>
 
-      {/* ━━━ 2. TECH TRUST BAR ━━━ */}
-      <section className="px-6 py-5 border-y border-gray-100">
-        <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-xs text-gray-400">
-          <span className="flex items-center gap-1.5"><span className="text-indigo-500">●</span> Powered by Claude Opus 4.7</span>
-          <span className="flex items-center gap-1.5"><span className="text-emerald-500">●</span> Données RGPD — serveurs européens</span>
-          <span className="flex items-center gap-1.5"><span className="text-amber-500">●</span> Garanti 30 jours ou remboursé</span>
-          <span className="flex items-center gap-1.5"><span className="text-violet-500">●</span> Adapté au marché français et belge</span>
-        </div>
-      </section>
-
-      {/* ━━━ 3. PRODUCT DEMO ━━━ */}
-      <section className="px-6 py-14 md:py-20">
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.6 }} className="max-w-4xl mx-auto">
+      {/* ━━━ PRODUCT MOCKUP — REAL UI ━━━ */}
+      <section className="px-6 pb-16">
+        <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.7 }} className="max-w-4xl mx-auto">
           <div className="rounded-2xl border border-gray-200 bg-gray-50/50 p-2 shadow-2xl shadow-gray-200/50">
-            <div className="rounded-xl bg-white p-5 sm:p-7 space-y-5">
-              <div className="flex items-center gap-2 pb-3 border-b border-gray-100">
+            <div className="rounded-xl bg-white overflow-hidden">
+              {/* Fake app header */}
+              <div className="flex items-center gap-3 px-5 py-3 border-b border-gray-100 bg-[#fafbfc]">
                 <div className="flex gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-red-300" /><div className="w-2.5 h-2.5 rounded-full bg-amber-300" /><div className="w-2.5 h-2.5 rounded-full bg-green-300" /></div>
-                <div className="flex-1 mx-3 h-7 rounded-md bg-gray-50 flex items-center px-3"><span className="text-[11px] text-gray-400">app.sendcv.ai/apply</span></div>
-              </div>
-              <div>
-                <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Description de l&apos;offre d&apos;emploi</p>
-                <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 min-h-[90px]">
-                  <p className="text-[13px] text-gray-600 leading-relaxed">{typed}<span className="animate-pulse text-indigo-500 font-bold">|</span></p>
+                <div className="flex gap-4 text-[11px]">
+                  <span className="text-indigo-600 font-semibold">Dashboard</span>
+                  <span className="text-gray-400 font-medium">Candidature</span>
+                  <span className="text-gray-400 font-medium">Templates</span>
                 </div>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {[
-                  { d: 2.0, bg: "bg-indigo-50", border: "border-indigo-100", color: "text-indigo-600", label: "MATCH SCORE", value: "87%" },
-                  { d: 2.3, bg: "bg-emerald-50", border: "border-emerald-100", color: "text-emerald-600", label: "CV", value: "Généré ✓" },
-                  { d: 2.6, bg: "bg-violet-50", border: "border-violet-100", color: "text-violet-600", label: "LETTRE", value: "Générée ✓" },
-                  { d: 2.9, bg: "bg-amber-50", border: "border-amber-100", color: "text-amber-600", label: "ENTRETIEN", value: "10 questions ✓" },
-                ].map((c, i) => (
-                  <motion.div key={i} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: c.d }}
-                    className={`rounded-xl ${c.bg} border ${c.border} p-3 text-center`}
-                  >
-                    <p className={`text-[9px] font-bold ${c.color} uppercase tracking-wider`}>{c.label}</p>
-                    <p className={`text-sm font-bold ${c.color} mt-1`}>{c.value}</p>
-                  </motion.div>
-                ))}
+              {/* Double score */}
+              <div className="p-5 grid grid-cols-2 gap-4">
+                <div className="p-4 rounded-xl border border-gray-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <div><p className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Score ATS</p><p className="text-[10px] text-gray-400">Filtres automatiques</p></div>
+                    <div className="w-12 h-12 rounded-xl bg-emerald-50 border-2 border-emerald-200 flex items-center justify-center text-emerald-600 font-extrabold text-lg">82</div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <ScoreBar label="Mots-clés" pct={85} color="bg-emerald-500" />
+                    <ScoreBar label="Format" pct={90} color="bg-emerald-500" />
+                    <ScoreBar label="Complétude" pct={72} color="bg-amber-500" />
+                  </div>
+                </div>
+                <div className="p-4 rounded-xl border border-gray-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <div><p className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Score Recruteur</p><p className="text-[10px] text-gray-400">Impact humain</p></div>
+                    <div className="w-12 h-12 rounded-xl bg-indigo-50 border-2 border-indigo-200 flex items-center justify-center text-indigo-600 font-extrabold text-lg">74</div>
+                  </div>
+                  <div className="space-y-1.5">
+                    <ScoreBar label="Impact chiffré" pct={68} color="bg-indigo-500" />
+                    <ScoreBar label="Spécificité" pct={75} color="bg-indigo-500" />
+                    <ScoreBar label="Pertinence" pct={80} color="bg-indigo-500" />
+                  </div>
+                </div>
+              </div>
+              {/* Keywords */}
+              <div className="px-5 pb-5">
+                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-2">Mots-clés de l&apos;offre</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {["React", "TypeScript", "Node.js", "Agile", "CI/CD"].map((k) => (
+                    <span key={k} className="px-2 py-0.5 rounded text-[10px] font-medium bg-emerald-50 border border-emerald-200 text-emerald-700">✓ {k}</span>
+                  ))}
+                  {["PostgreSQL", "AWS"].map((k) => (
+                    <span key={k} className="px-2 py-0.5 rounded text-[10px] font-medium bg-red-50 border border-red-200 text-red-600">✕ {k}</span>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
+          <p className="text-xs text-gray-400 text-center mt-3">L&apos;IA analyse chaque offre et double-optimise : pour les robots (ATS) ET pour le recruteur humain.</p>
         </motion.div>
       </section>
 
-      {/* ━━━ 4. STATS ━━━ */}
-      <section className="px-6 py-12 bg-gray-50 border-y border-gray-100">
-        <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          <div ref={c1.ref}><p className="text-3xl font-extrabold">{c1.c}s</p><p className="text-xs text-gray-400 mt-1">par candidature</p></div>
-          <div ref={c2.ref}><p className="text-3xl font-extrabold">{c2.c}</p><p className="text-xs text-gray-400 mt-1">documents générés</p></div>
-          <div><p className="text-3xl font-extrabold">4.90€</p><p className="text-xs text-gray-400 mt-1">par candidature</p></div>
-          <div><p className="text-3xl font-extrabold text-indigo-600">30j</p><p className="text-xs text-gray-400 mt-1">garantie entretien</p></div>
+      {/* ━━━ STAT BAR — REAL DATA ━━━ */}
+      <section className="px-6 py-12 bg-gray-900 text-white">
+        <div className="max-w-4xl mx-auto grid grid-cols-3 gap-8 text-center">
+          <div ref={c1.ref}><p className="text-3xl md:text-4xl font-extrabold">{c1.c}%</p><p className="text-xs text-gray-400 mt-1">des CV filtrés par les robots avant un humain</p></div>
+          <div ref={c2.ref}><p className="text-3xl md:text-4xl font-extrabold">{c2.c}%</p><p className="text-xs text-gray-400 mt-1">d&apos;offres fictives en Belgique</p></div>
+          <div ref={c3.ref}><p className="text-3xl md:text-4xl font-extrabold">{c3.c}</p><p className="text-xs text-gray-400 mt-1">candidatures gratuites pour tester</p></div>
         </div>
       </section>
 
-      {/* ━━━ 5. BEFORE / AFTER ━━━ */}
-      <Section label="Le problème" title={<>Tu passes <span className="text-red-500">2 heures</span> par candidature.<br /><span className="text-gray-400">Pour 5% de taux de réponse.</span></>}>
+      {/* ━━━ BEFORE / AFTER ━━━ */}
+      <Section label="Le problème" title={<>Tu personnalises chaque candidature ?<br /><span className="text-gray-400">Ça prend 2 heures. À chaque fois.</span></>}>
         <div className="grid md:grid-cols-2 gap-4">
-          <Card className="border-red-100 bg-red-50/40">
-            <p className="text-xs font-bold text-red-500 uppercase tracking-wider mb-4">Sans SendCV</p>
-            {["45 min pour adapter le CV", "30 min pour la lettre de motivation", "20 min de recherche entreprise", "0 min de préparation entretien", "→ Taux de réponse : ~5%"].map((t, i) => (
-              <div key={i} className="flex items-center gap-3 text-sm text-red-700/60 mb-2.5"><span className="text-red-400 text-xs">✕</span>{t}</div>
+          <div className="rounded-2xl border-2 border-red-100 bg-red-50/40 p-6 space-y-3">
+            <p className="text-xs font-bold text-red-500 uppercase tracking-wider">Aujourd&apos;hui</p>
+            {["45 min pour adapter le CV à chaque offre", "30 min pour la lettre de motivation", "Aucune idée des mots-clés ATS à utiliser", "Zéro préparation pour l'entretien", "→ Taux de réponse : ~5%"].map((t, i) => (
+              <div key={i} className="flex items-center gap-3 text-sm text-red-700/60"><span className="text-red-400 text-xs">✕</span>{t}</div>
             ))}
-          </Card>
-          <Card className="border-emerald-100 bg-emerald-50/40">
-            <p className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-4">Avec SendCV</p>
-            {["CV sur-mesure ATS en 20 secondes", "Lettre personnalisée en 15 secondes", "Analyse complète du poste incluse", "10 questions d'entretien avec réponses", "→ Candidature parfaite. À chaque fois."].map((t, i) => (
-              <div key={i} className="flex items-center gap-3 text-sm text-emerald-700/80 mb-2.5"><span className="text-emerald-500 text-xs">✓</span>{t}</div>
+          </div>
+          <div className="rounded-2xl border-2 border-emerald-100 bg-emerald-50/40 p-6 space-y-3">
+            <p className="text-xs font-bold text-emerald-600 uppercase tracking-wider">Avec SendCV</p>
+            {["CV réécrit avec les mots-clés exacts de l'offre", "Lettre personnalisée pour cette entreprise", "Score ATS + Score Recruteur avant d'envoyer", "10 questions d'entretien probables + réponses", "→ Candidature optimisée. À chaque fois."].map((t, i) => (
+              <div key={i} className="flex items-center gap-3 text-sm text-emerald-700/80"><span className="text-emerald-500 text-xs">✓</span>{t}</div>
             ))}
-          </Card>
+          </div>
         </div>
       </Section>
 
-      {/* ━━━ 6. HOW IT WORKS ━━━ */}
-      <Section label="Comment ça marche" title="3 étapes. Un seul input." bg>
+      {/* ━━━ HOW IT WORKS ━━━ */}
+      <Section label="Comment ça marche" title="1 offre. 60 secondes. Tout est fait." bg>
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={st} className="grid md:grid-cols-3 gap-10">
           {[
-            { n: "1", t: "Colle l'offre", d: "Copie-colle la description du poste depuis Indeed, LinkedIn, Stepstone ou n'importe quel site d'emploi.", c: "bg-indigo-600" },
-            { n: "2", t: "Analyse gratuite", d: "L'IA analyse le poste, calcule ton match score, identifie les mots-clés ATS et les red flags. 100% gratuit.", c: "bg-violet-600" },
-            { n: "3", t: "Génère tout", d: "CV sur-mesure + lettre de motivation + 10 questions d'entretien + tips LinkedIn. 1 crédit = 1 candidature complète.", c: "bg-amber-500" },
+            { n: "1", t: "Colle l'offre", d: "Copie la description depuis Indeed, LinkedIn, StepStone ou n'importe où. C'est le seul input.", c: "bg-indigo-600" },
+            { n: "2", t: "L'IA analyse", d: "Double scoring ATS + Recruteur. Mots-clés matchés. Salaire estimé. Red flags détectés. Gratuit.", c: "bg-violet-600" },
+            { n: "3", t: "Tout est généré", d: "CV sur-mesure + lettre + 10 questions d'entretien + tips LinkedIn. Télécharge en PDF.", c: "bg-amber-500" },
           ].map((s, i) => (
             <motion.div key={i} variants={fu}>
               <div className={`w-12 h-12 ${s.c} text-white rounded-xl font-bold text-lg flex items-center justify-center mb-4`}>{s.n}</div>
@@ -158,201 +174,121 @@ export default function Landing() {
           ))}
         </motion.div>
         <div className="text-center mt-12">
-          <Link href="/signup" className="inline-flex items-center gap-2 bg-indigo-600 text-white px-7 py-3 rounded-xl font-semibold text-sm hover:bg-indigo-700 transition-all shadow-md shadow-indigo-600/15">
-            Essayer gratuitement <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+          <Link href="/signup" className="inline-flex items-center gap-2 bg-indigo-600 text-white px-7 py-3.5 rounded-xl font-bold text-sm hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/15">
+            Essayer gratuitement — 3 candidatures offertes <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
           </Link>
         </div>
       </Section>
 
-      {/* ━━━ 7. OUTPUT PREVIEW ━━━ */}
-      <Section label="Exemple de résultat" title={<>Voilà ce que SendCV génère.<br /><span className="text-gray-400">Pour chaque candidature.</span></>}>
+      {/* ━━━ WHAT YOU GET — CV MOCKUP ━━━ */}
+      <Section label="Ce que tu reçois" title={<>Pas un template.<br /><span className="text-gray-400">Un CV réécrit pour CE poste.</span></>}>
         <div className="grid md:grid-cols-2 gap-5">
-          <Card className="border-gray-200">
+          {/* CV preview */}
+          <div className="p-5 rounded-2xl bg-white border border-gray-200 shadow-lg">
             <div className="flex items-center gap-2 mb-3"><span className="text-lg">📄</span><p className="font-bold text-sm">CV généré — Développeur Full-Stack</p></div>
             <div className="rounded-lg bg-gray-50 p-4 text-xs text-gray-600 leading-relaxed space-y-2 font-mono">
               <p className="font-bold text-gray-900 text-sm">Marie Dupont</p>
-              <p className="text-gray-500">Bruxelles, Belgique • FR (natif), EN (C1), NL (B1)</p>
+              <p className="text-gray-500">Bruxelles • FR (natif), EN (C1), NL (B1)</p>
               <p className="border-t border-gray-200 pt-2 font-bold text-gray-800">PROFIL</p>
-              <p>Développeuse Full-Stack avec 4 ans d&apos;expérience en React et Node.js. Spécialisée dans les architectures TypeScript/PostgreSQL. Track record de delivery en équipe agile, réduction de 40% du time-to-market sur le dernier projet.</p>
-              <p className="font-bold text-gray-800">EXPERIENCE</p>
-              <p className="font-semibold text-gray-700">Full-Stack Developer — TechCorp, Bruxelles (2022-present)</p>
-              <p>• Migration frontend React 18 → Next.js 15, +35% performance</p>
-              <p>• Implémentation CI/CD, réduction bugs production de 60%</p>
-              <p className="text-gray-400 italic">... généré pour CE poste, avec les mots-clés ATS exacts</p>
+              <p>Développeuse Full-Stack avec 4 ans d&apos;expérience en <span className="bg-emerald-100 text-emerald-700 px-0.5 rounded">React</span> et <span className="bg-emerald-100 text-emerald-700 px-0.5 rounded">Node.js</span>. Réduction de 40% du time-to-market.</p>
+              <p className="font-bold text-gray-800">EXPÉRIENCE</p>
+              <p>• Migration <span className="bg-emerald-100 text-emerald-700 px-0.5 rounded">React</span> 18 → Next.js 15, <strong>+35% performance</strong></p>
+              <p>• <span className="bg-emerald-100 text-emerald-700 px-0.5 rounded">CI/CD</span> implémenté, <strong>réduction bugs -60%</strong></p>
+              <p className="text-gray-400 italic text-[10px]">Mots-clés ATS surlignés en vert</p>
             </div>
-          </Card>
-          <Card className="border-gray-200">
-            <div className="flex items-center gap-2 mb-3"><span className="text-lg">🎯</span><p className="font-bold text-sm">Préparation entretien — Question #3</p></div>
-            <div className="rounded-lg bg-gray-50 p-4 text-xs leading-relaxed space-y-2">
-              <p className="font-bold text-gray-900">Q: Décrivez un projet complexe où vous avez dû faire des choix d&apos;architecture.</p>
-              <p className="text-gray-500 italic">Ce qu&apos;ils évaluent : capacité de décision technique, communication, impact business.</p>
-              <div className="bg-emerald-50 rounded-lg p-3 border border-emerald-100">
-                <p className="text-[10px] font-bold text-emerald-600 uppercase mb-1">Réponse optimale</p>
-                <p className="text-gray-700">Chez TechCorp, j&apos;ai piloté la migration de notre monolithe PHP vers une architecture microservices Next.js/Node.js. L&apos;enjeu : 200K utilisateurs actifs, zéro downtime. J&apos;ai proposé une migration progressive par domaine métier. Résultat : 35% de gain de performance, 60% de réduction des incidents...</p>
+          </div>
+          {/* Interview preview */}
+          <div className="p-5 rounded-2xl bg-white border border-gray-200 shadow-lg">
+            <div className="flex items-center gap-2 mb-3"><span className="text-lg">🎯</span><p className="font-bold text-sm">Préparation entretien</p></div>
+            <div className="rounded-lg bg-gray-50 p-4 text-xs leading-relaxed space-y-3">
+              <div>
+                <p className="font-bold text-gray-900">Q3: Décrivez un projet complexe.</p>
+                <p className="text-gray-400 italic text-[10px] mt-0.5">Évalue : décision technique, impact business</p>
+                <div className="bg-emerald-50 rounded-lg p-2.5 border border-emerald-100 mt-2">
+                  <p className="text-[10px] font-bold text-emerald-600 uppercase">Réponse suggérée</p>
+                  <p className="text-gray-700 mt-1">Chez TechCorp, j&apos;ai piloté la migration vers Next.js pour 200K utilisateurs. Résultat : +35% perf, -60% incidents...</p>
+                </div>
+              </div>
+              <div className="pt-2 border-t border-gray-200">
+                <p className="font-bold text-gray-900">🎤 Simulation d&apos;entretien</p>
+                <p className="text-gray-500 mt-1">L&apos;IA joue le recruteur. Tu t&apos;entraînes en conditions réelles.</p>
               </div>
             </div>
-          </Card>
+          </div>
         </div>
       </Section>
 
-      {/* ━━━ 8. FEATURES ━━━ */}
-      <Section label="Ce que tu recois" title={<>Un cabinet facture 500€.<br /><span className="text-gray-400">Tu paies 4.90€.</span></>} bg>
+      {/* ━━━ FEATURES GRID ━━━ */}
+      <Section label="Tout compris" title="Ce qu'aucun autre outil ne fait." bg>
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={st} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
-            { icon: "📄", t: "CV sur-mesure ATS", d: "Réécrit pour CE poste avec les mots-clés exacts. Optimisé pour les ATS utilisés en France et Belgique.", tag: "FR / BE" },
-            { icon: "✉️", t: "Lettre de motivation", d: "Personnalisée pour cette entreprise. Éléments spécifiques de l'offre. Prête à envoyer.", tag: "Sur-mesure" },
-            { icon: "🎯", t: "Préparation entretien", d: "10 questions probables + réponses optimales basées sur ton profil. Méthode STAR, chiffres concrets.", tag: "10 questions" },
-            { icon: "📊", t: "Analyse du poste", d: "Salaire estimé (brut mensuel, 13ème mois en BE), red flags, culture, compétences manquantes.", tag: "Match score" },
-            { icon: "🔗", t: "Optimisation LinkedIn", d: "Headline et résumé optimisés pour ce type de poste. Mots-clés du secteur pour les recruteurs.", tag: "Headline + bio" },
-            { icon: "🇫🇷🇧🇪", t: "Fait pour la France et la Belgique", d: "Compétences-first en France, bilingue en Belgique, niveaux CECR, 13ème mois. Pas un outil US traduit.", tag: "FR / BE" },
+            { icon: "📊", t: "Double scoring", d: "Score ATS (robots) + Score Recruteur (humain). Tu sais exactement pourquoi ta candidature va marcher — ou pas." },
+            { icon: "📄", t: "CV réécrit, pas rempli", d: "L'IA réécrit CHAQUE bullet point avec des chiffres d'impact. Pas un template. Un CV fait pour CE poste." },
+            { icon: "✉️", t: "Lettre qui se démarque", d: "Personnalisée pour cette entreprise. Mentionne des éléments spécifiques de l'offre. Prête à envoyer." },
+            { icon: "🎯", t: "10 questions d'entretien", d: "Les questions les plus probables + les réponses optimales basées sur TON profil." },
+            { icon: "🎤", t: "Simulation d'entretien", d: "L'IA joue le recruteur. Tu réponds en conditions réelles. Feedback instantané." },
+            { icon: "🇫🇷🇧🇪", t: "Fait pour la France et la Belgique", d: "Compétences-first en France. Bilingue en Belgique. Niveaux CECR. 13ème mois. Pas un outil US traduit." },
           ].map((f, i) => (
             <motion.div key={i} variants={fu} className="group rounded-2xl border border-gray-200 bg-white p-5 hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-500/5 transition-all duration-300">
-              <div className="flex items-start gap-3">
-                <span className="text-2xl mt-0.5 shrink-0">{f.icon}</span>
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2 mb-1 flex-wrap"><h3 className="font-bold text-[15px]">{f.t}</h3><span className="text-[10px] bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full font-semibold">{f.tag}</span></div>
-                  <p className="text-sm text-gray-500 leading-relaxed">{f.d}</p>
-                </div>
-              </div>
+              <span className="text-2xl">{f.icon}</span>
+              <h3 className="font-bold text-[15px] mt-3 mb-1.5 group-hover:text-indigo-700 transition-colors">{f.t}</h3>
+              <p className="text-sm text-gray-500 leading-relaxed">{f.d}</p>
             </motion.div>
           ))}
         </motion.div>
       </Section>
 
-      {/* ━━━ 9. PROFESSIONS ━━━ */}
-      <Section label="Ça marche pour tous les métiers" title="Quel que soit ton secteur.">
+      {/* ━━━ PROFESSIONS ━━━ */}
+      <Section label="Tous les métiers" title="Quel que soit ton secteur.">
         <div className="flex flex-wrap justify-center gap-2.5">
-          {[
-            "Développeur", "Marketing", "Finance", "Ressources Humaines", "Design", "Commercial",
-            "Santé", "Ingénieur", "Juridique", "Data & IA", "Gestion de projet", "Communication",
-            "Logistique", "Éducation", "Consulting",
-          ].map((p) => (
+          {["Développeur", "Marketing", "Finance", "RH", "Design", "Commercial", "Santé", "Ingénieur", "Juridique", "Data & IA", "Gestion de projet", "Communication", "Logistique", "Éducation", "Consulting"].map((p) => (
             <span key={p} className="px-4 py-2 rounded-full bg-gray-50 border border-gray-200 text-sm text-gray-600 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700 transition-all cursor-default">{p}</span>
           ))}
         </div>
-        <p className="text-center text-xs text-gray-400 mt-6">L&apos;IA s&apos;adapte à chaque secteur et chaque niveau d&apos;expérience, en France et en Belgique.</p>
       </Section>
 
-      {/* ━━━ 10. COMPARISON TABLE ━━━ */}
-      <Section label="Comparaison" title={<>&laquo; Il existe déjà des outils pour ça ? &raquo;</>} bg>
-        <div className="rounded-2xl border border-gray-200 bg-white overflow-hidden max-w-3xl mx-auto">
-          <table className="w-full text-sm">
-            <thead><tr className="bg-gray-50 border-b border-gray-100">
-              <th className="text-left py-3 px-4 text-xs text-gray-500 font-medium w-28"></th>
-              <th className="py-3 px-3 text-xs text-gray-400 font-medium text-center">CV builders<br /><span className="font-normal">(Rezi, Zety...)</span></th>
-              <th className="py-3 px-3 text-xs text-gray-400 font-medium text-center">ATS scanners<br /><span className="font-normal">(Jobscan, Teal)</span></th>
-              <th className="py-3 px-3 text-xs font-bold text-indigo-600 text-center bg-indigo-50/50">SendCV.ai</th>
-            </tr></thead>
-            <tbody className="divide-y divide-gray-50">
-              {[
-                ["Input", "Formulaire", "Upload + offre", "1 offre d'emploi"],
-                ["Output", "1 CV", "Score ATS", "CV+Lettre+Entretien+LinkedIn"],
-                ["Personnalisation", "Template rempli", "Keywords highlights", "Tout réécrit pour CE poste"],
-                ["Marché FR/BE", "US traduit", "English only", "Natif français et belge"],
-                ["IA", "GPT-3.5", "GPT-4", "Claude Opus 4.7"],
-                ["Temps", "15-30 min", "10 min", "60 secondes"],
-                ["Garantie", "—", "—", "Entretien 30j ✓"],
-                ["Prix", "~$29/mois", "~$50/mois", "4.90€/candidature"],
-              ].map((r, i) => (
-                <tr key={i}><td className="py-2.5 px-4 font-medium text-xs text-gray-700">{r[0]}</td><td className="py-2.5 px-3 text-xs text-gray-400 text-center">{r[1]}</td><td className="py-2.5 px-3 text-xs text-gray-400 text-center">{r[2]}</td><td className="py-2.5 px-3 text-xs text-indigo-600 font-semibold text-center bg-indigo-50/20">{r[3]}</td></tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </Section>
-
-      {/* ━━━ 11. TRUST & SECURITY ━━━ */}
-      <Section label="Sécurité & confiance" title="Tes données sont entre de bonnes mains.">
-        <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { icon: "🧠", t: "Claude Opus 4.7", d: "Le modèle IA le plus puissant du marché. Sorti le 16 avril 2026 par Anthropic." },
-            { icon: "🇪🇺", t: "RGPD compliant", d: "Données hébergées en Europe. Rien n'est revendu. Tu peux supprimer ton compte à tout moment." },
-            { icon: "🛡️", t: "Garantie 30 jours", d: "10+ candidatures, zéro entretien ? Remboursement complet, sans question." },
-            { icon: "🇫🇷🇧🇪", t: "France & Belgique", d: "Compétences-first en France, bilingue en Belgique, niveaux CECR, 13ème mois. Adapté à ton marché." },
-          ].map((t, i) => (
-            <div key={i} className="text-center p-5 rounded-2xl border border-gray-200 bg-white">
-              <span className="text-3xl">{t.icon}</span>
-              <h3 className="font-bold text-sm mt-3 mb-1">{t.t}</h3>
-              <p className="text-xs text-gray-500 leading-relaxed">{t.d}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* ━━━ 12. TESTIMONIALS ━━━ */}
-      <Section label="Premiers retours" title="Ce qu'en pensent nos bêta-testeurs." bg>
-        <div className="grid md:grid-cols-3 gap-5">
-          {[
-            { name: "Sophie M.", role: "Marketing Manager, Bruxelles", quote: "J'ai envoyé 8 candidatures en un après-midi. Avant, ça me prenait une semaine. Et la lettre de motivation est vraiment personnalisée, pas un template." },
-            { name: "Thomas L.", role: "Développeur, Paris", quote: "Le match score m'a évité de postuler à des offres où j'avais aucune chance. Et les questions d'entretien étaient quasi les mêmes que celles qu'on m'a posées." },
-            { name: "Elena K.", role: "Business Analyst, Liège", quote: "Enfin un outil qui comprend le marché belge. Le CV généré mentionnait les langues avec les niveaux CECR et le 13ème mois dans l'estimation salariale." },
-          ].map((t, i) => (
-            <div key={i} className="p-5 rounded-2xl border border-gray-200 bg-white">
-              <p className="text-sm text-gray-600 leading-relaxed italic mb-4">&laquo; {t.quote} &raquo;</p>
-              <div><p className="font-bold text-sm">{t.name}</p><p className="text-xs text-gray-400">{t.role}</p></div>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* ━━━ 13. PRICING ━━━ */}
-      <Section label="Prix" title={<>Simple. Transparent.<br /><span className="text-gray-400">Pas d&apos;abonnement. Crédits sans expiration.</span></>}>
+      {/* ━━━ PRICING ━━━ */}
+      <Section label="Prix" title={<>Commence gratuitement.<br /><span className="text-gray-400">Upgrade quand tu veux.</span></>} bg>
         <div className="grid md:grid-cols-3 gap-5 max-w-3xl mx-auto">
-          {[
-            { name: "Starter", price: "19", n: 3, per: "6.33", pop: false },
-            { name: "Pro", price: "49", n: 10, per: "4.90", pop: true },
-            { name: "Ultra", price: "99", n: 30, per: "3.30", pop: false },
-          ].map((p) => (
-            <div key={p.name} className={`rounded-2xl p-6 text-center space-y-4 relative ${p.pop ? "border-2 border-indigo-600 shadow-xl shadow-indigo-600/10 bg-white md:scale-[1.03]" : "border border-gray-200 bg-white"}`}>
-              {p.pop && <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-[10px] font-bold px-3 py-1 rounded-full">Le + populaire</div>}
-              <p className={`font-semibold ${p.pop ? "text-indigo-600" : "text-gray-500"}`}>{p.name}</p>
-              <p className="text-4xl font-extrabold">{p.price}€</p>
-              <p className="text-sm text-gray-500"><strong className="text-gray-800">{p.n}</strong> candidatures complètes</p>
-              <p className={`text-xs font-semibold ${p.pop ? "text-indigo-600" : "text-gray-400"}`}>{p.per}€ / candidature</p>
-              <Link href="/signup" className={`block w-full py-3 rounded-xl font-semibold text-sm transition-colors ${p.pop ? "bg-indigo-600 text-white hover:bg-indigo-700" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}>
-                {p.pop ? "Choisir Pro" : "Commencer"}
-              </Link>
-            </div>
-          ))}
+          <PriceCard name="Free" price="0€" sub="Pour tester" features={["3 candidatures complètes", "1 simulation d'entretien", "50 templates CV", "Export PDF", "Double scoring"]} />
+          <PriceCard name="Pro" price="19€" priceSub="/mois" sub="Tout illimité" popular features={["Générations illimitées", "Simulations illimitées", "Coach IA complet", "Support prioritaire"]} cta="Passer à Pro" />
+          <PriceCard name="Lifetime" price="79€" priceSub=" une fois" sub="Pour toujours" features={["Tout Pro inclus", "Paiement unique", "Accès à vie", "Futures features incluses"]} cta="Acheter Lifetime" dark />
         </div>
       </Section>
 
-      {/* ━━━ 14. GUARANTEE ━━━ */}
+      {/* ━━━ GUARANTEE ━━━ */}
       <section className="px-6 py-16 bg-indigo-600">
         <div className="max-w-2xl mx-auto text-center">
           <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-5"><span className="text-2xl">🛡️</span></div>
           <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-3">Garantie Entretien 30 Jours</h2>
-          <p className="text-indigo-100 leading-relaxed mb-6">Envoie 10+ candidatures avec SendCV. Zéro entretien en 30 jours ? <strong className="text-white">Remboursement complet.</strong> Sans question.</p>
+          <p className="text-indigo-100 leading-relaxed mb-6">Envoie 10+ candidatures avec SendCV. Zéro entretien en 30 jours ? <strong className="text-white">Remboursement complet.</strong></p>
           <Link href="/signup" className="inline-flex items-center gap-2 bg-white text-indigo-700 px-7 py-3.5 rounded-xl font-bold text-sm hover:bg-indigo-50 transition-colors shadow-lg">
             Commencer sans risque <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
           </Link>
         </div>
       </section>
 
-      {/* ━━━ 15. FAQ ━━━ */}
+      {/* ━━━ FAQ ━━━ */}
       <Section label="" title="Questions fréquentes">
         <div className="max-w-2xl mx-auto">
           {[
-            { q: "L'analyse est vraiment gratuite ?", a: "Oui. Tu colles une offre, tu reçois l'analyse complète — match score, compétences, salaire, red flags. Tu ne paies que pour générer le CV + lettre + préparation entretien." },
-            { q: "C'est différent d'un générateur de CV classique ?", a: "Complètement. Les générateurs remplissent un template. SendCV analyse l'offre spécifique et réécrit tout ton profil pour matcher ce poste. CV + lettre + entretien + LinkedIn en une action." },
+            { q: "C'est quoi les 3 candidatures gratuites ?", a: "Tu reçois 3 générations complètes : CV personnalisé + lettre de motivation + 10 questions d'entretien + tips LinkedIn. Exactement comme les utilisateurs payants. Pas de version limitée." },
+            { q: "C'est différent d'un générateur de CV ?", a: "Complètement. Les générateurs remplissent un template. SendCV analyse l'offre spécifique et réécrit tout ton profil pour matcher ce poste. CV + lettre + entretien en une action." },
             { q: "Ça marche pour le marché belge et français ?", a: "C'est fait pour ça. Conventions CV adaptées, langues avec niveaux CECR, salaires brut mensuel avec 13ème mois en Belgique. Pas un outil américain traduit." },
-            { q: "Quelle IA est utilisée ?", a: "Claude Opus 4.7 d'Anthropic — le modèle le plus puissant du marché, sorti le 16 avril 2026. Les concurrents utilisent GPT-3.5 ou GPT-4. On utilise le meilleur." },
-            { q: "Comment fonctionne la garantie ?", a: "10+ candidatures en 30 jours via SendCV. Zéro entretien ? Envoie-nous un email, remboursement complet. Pas de conditions cachées." },
-            { q: "Mes crédits expirent ?", a: "Non. Utilise-les quand tu veux. Pas d'abonnement." },
+            { q: "Comment fonctionne la garantie ?", a: "10+ candidatures en 30 jours via SendCV. Zéro entretien ? Envoie-nous un email, remboursement complet." },
             { q: "Mes données sont en sécurité ?", a: "Oui. Données hébergées en Europe, RGPD compliant. Tu peux supprimer ton compte et toutes tes données à tout moment." },
           ].map((f, i) => <FAQ key={i} q={f.q} a={f.a} />)}
         </div>
       </Section>
 
-      {/* ━━━ 16. FINAL CTA ━━━ */}
+      {/* ━━━ FINAL CTA ━━━ */}
       <section className="px-6 py-20 md:py-28 bg-gray-50 border-t border-gray-100">
         <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-3xl md:text-[2.5rem] font-extrabold leading-tight">Ta prochaine candidature<br />prend 60 secondes.</h2>
-          <p className="text-gray-400 mt-4 mb-8 text-lg">Pendant que tu hésites, quelqu&apos;un d&apos;autre décroche le poste.</p>
+          <h2 className="text-3xl md:text-[2.5rem] font-extrabold leading-tight">Prêt à décrocher des entretiens ?</h2>
+          <p className="text-gray-400 mt-4 mb-8 text-lg">3 candidatures gratuites. Pas de carte bancaire.</p>
           <Link href="/signup" className="inline-flex items-center gap-2 bg-indigo-600 text-white px-9 py-4 rounded-xl font-bold text-base hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-600/20 hover:-translate-y-0.5">
-            Creer mon compte gratuitement <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+            Créer mon compte gratuitement <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
           </Link>
-          <p className="text-xs text-gray-400 mt-3">Analyse gratuite. Pas de carte bancaire.</p>
         </div>
       </section>
 
@@ -363,8 +299,6 @@ export default function Landing() {
           <div className="flex items-center gap-4 text-[11px] text-gray-400">
             <Link href="/legal" className="hover:text-gray-600 transition-colors">Mentions légales & CGV</Link>
             <span>·</span>
-            <span>Powered by Claude Opus 4.7</span>
-            <span>·</span>
             <span>© 2026</span>
           </div>
         </div>
@@ -373,7 +307,7 @@ export default function Landing() {
   );
 }
 
-// ━━━ Reusable components ━━━
+// ━━━ Components ━━━
 
 function Section({ label, title, children, bg }: { label: string; title: React.ReactNode; children: React.ReactNode; bg?: boolean }) {
   return (
@@ -389,8 +323,37 @@ function Section({ label, title, children, bg }: { label: string; title: React.R
   );
 }
 
-function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <div className={`rounded-2xl border-2 p-6 ${className}`}>{children}</div>;
+function ScoreBar({ label, pct, color }: { label: string; pct: number; color: string }) {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="text-[10px] text-gray-400 w-20 shrink-0">{label}</span>
+      <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden"><div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} /></div>
+      <span className="text-[10px] font-mono text-gray-500 w-6 text-right">{pct}</span>
+    </div>
+  );
+}
+
+function PriceCard({ name, price, priceSub, sub, features, popular, cta, dark }: {
+  name: string; price: string; priceSub?: string; sub: string; features: string[]; popular?: boolean; cta?: string; dark?: boolean;
+}) {
+  return (
+    <div className={`rounded-3xl p-7 text-center relative ${popular ? "border-2 border-indigo-600 shadow-xl shadow-indigo-600/10 bg-white md:scale-[1.04]" : "border border-gray-200 bg-white"}`}>
+      {popular && <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-[10px] font-bold px-4 py-1 rounded-full">Recommandé</div>}
+      <p className={`font-semibold ${popular ? "text-indigo-600" : "text-gray-500"}`}>{name}</p>
+      <div className="mt-3 mb-1"><span className="text-4xl font-extrabold">{price}</span>{priceSub && <span className="text-gray-400 text-sm">{priceSub}</span>}</div>
+      <p className="text-sm text-gray-400 mb-5">{sub}</p>
+      <ul className="space-y-2 mb-6 text-left">
+        {features.map((f, i) => <li key={i} className="flex items-center gap-2 text-sm"><span className="w-4 h-4 rounded-full bg-indigo-50 flex items-center justify-center text-[9px] text-indigo-600 shrink-0">✓</span><span className="text-gray-600">{f}</span></li>)}
+      </ul>
+      <Link href="/signup" className={`block w-full py-3 rounded-2xl font-bold text-sm transition-all ${
+        popular ? "bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-600/15" :
+        dark ? "bg-gray-900 text-white hover:bg-gray-800" :
+        "bg-gray-100 text-gray-700 hover:bg-gray-200"
+      }`}>
+        {cta || "Commencer gratuitement"}
+      </Link>
+    </div>
+  );
 }
 
 function FAQ({ q, a }: { q: string; a: string }) {
