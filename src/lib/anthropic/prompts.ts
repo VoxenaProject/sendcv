@@ -397,3 +397,90 @@ Réponds UNIQUEMENT en JSON valide, sans markdown :
   "certifications": ["Certification si applicable"]
 }`;
 }
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// COACH IA — Actions contextuelles
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+export function buildCoachingAdvicePrompt(jobDescription: string, profile: Profile, matchScore: number, missingSkills: string[], weaknesses: string[]): string {
+  return `Tu es un coach carrière senior spécialisé dans le marché français et belge. Tu donnes des conseils CONCRETS et ACTIONNABLES, pas des généralités.
+
+OFFRE ANALYSÉE :
+${jobDescription}
+
+PROFIL DU CANDIDAT :
+- Nom : ${profile.full_name}
+- Titre : ${profile.headline || ""}
+- Expérience : ${profile.experience || ""}
+- Compétences : ${profile.skills || ""}
+- Langues : ${profile.languages || ""}
+
+RÉSULTATS DE L'ANALYSE :
+- Match score : ${matchScore}%
+- Compétences manquantes : ${missingSkills.join(", ") || "Aucune"}
+- Points faibles identifiés : ${weaknesses.join(", ") || "Aucun"}
+
+Donne exactement 3 conseils CONCRETS et PERSONNALISÉS pour cette candidature.
+Chaque conseil doit être actionnable MAINTENANT (pas "développe tes compétences sur le long terme").
+
+Réponds UNIQUEMENT en JSON valide, sans markdown :
+{
+  "advice": [
+    {
+      "title": "titre court du conseil (5 mots max)",
+      "content": "explication concrète de ce qu'il faut faire (2-3 phrases max)",
+      "priority": "high" | "medium" | "low"
+    }
+  ]
+}`;
+}
+
+export function buildInterviewSimulationSystemPrompt(jobDescription: string, profile: Profile, companyName: string): string {
+  return `Tu es un recruteur senior chez ${companyName}. Tu fais passer un entretien pour ce poste.
+
+TON RÔLE :
+- Tu poses des questions UNE PAR UNE (jamais plusieurs à la fois)
+- Tu commences par te présenter brièvement et mettre le candidat à l'aise
+- Tu poses 5-7 questions au total (mix technique + motivation + fit culturel)
+- Après chaque réponse du candidat, tu donnes un FEEDBACK COURT (1-2 phrases) entre crochets [Feedback: ...]
+- Puis tu enchaînes avec la question suivante
+- À la fin, tu donnes un BILAN avec une note /10 et les points à améliorer
+
+OFFRE D'EMPLOI :
+${jobDescription}
+
+PROFIL DU CANDIDAT (tu ne le connais PAS en tant que recruteur, mais tu adaptes tes questions) :
+- Titre : ${profile.headline || ""}
+- Compétences déclarées : ${profile.skills || ""}
+
+STYLE D'ENTRETIEN :
+- Professionnel mais bienveillant
+- Questions spécifiques au poste, pas génériques
+- Inclus au moins 1 question technique, 1 question motivation, 1 mise en situation
+- En français
+
+Commence par te présenter et poser ta première question.`;
+}
+
+export function buildRejectionAnalysisPrompt(jobDescription: string, profile: Profile, matchScore: number): string {
+  return `Tu es un coach carrière. Le candidat a postulé à cette offre et a été refusé. Analyse pourquoi et donne des pistes concrètes.
+
+OFFRE :
+${jobDescription}
+
+PROFIL :
+- Titre : ${profile.headline || ""}
+- Expérience : ${profile.experience || ""}
+- Compétences : ${profile.skills || ""}
+- Langues : ${profile.languages || ""}
+- Match score : ${matchScore}%
+
+Analyse les causes probables du refus et donne des conseils pour les prochaines candidatures.
+
+Réponds UNIQUEMENT en JSON valide :
+{
+  "probable_causes": ["cause 1", "cause 2"],
+  "what_to_improve": ["action concrète 1", "action concrète 2"],
+  "encouragement": "message motivant et honnête (1-2 phrases)"
+}`;
+}

@@ -237,6 +237,50 @@ export default async function ApplicationDetailPage(props: { params: Promise<{ i
         </div>
       )}
 
+      {/* ━━━ COACH ACTIONS (Pro only) ━━━ */}
+      {app.status !== "analyzed" && (plan === "pro" || plan === "lifetime") && (
+        <div className="grid md:grid-cols-2 gap-3">
+          <Link href={`/apply/${app.id}/simulate`}
+            className="flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-100 hover:border-indigo-300 hover:shadow-lg hover:shadow-indigo-500/5 transition-all group"
+          >
+            <div className="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center group-hover:scale-110 transition-transform shrink-0">
+              <span className="text-lg">🎤</span>
+            </div>
+            <div>
+              <p className="font-bold text-sm text-indigo-800">Simuler l&apos;entretien</p>
+              <p className="text-[11px] text-indigo-500">L&apos;IA joue le recruteur. Entraîne-toi.</p>
+            </div>
+          </Link>
+          <div className="flex items-center gap-3 p-4 rounded-2xl bg-emerald-50 border border-emerald-100">
+            <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0">
+              <span className="text-lg">💡</span>
+            </div>
+            <div>
+              <p className="font-bold text-sm text-emerald-800">Conseil du coach</p>
+              <p className="text-[11px] text-emerald-600">
+                {a?.recruiter_insights?.first_impression?.[0] || "Personnalise bien ta candidature pour ce poste."}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ━━━ UPGRADE CTA for free users ━━━ */}
+      {app.status !== "analyzed" && plan === "free" && (
+        <div className="p-4 rounded-2xl bg-gray-50 border border-gray-200 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="text-xl">🎤</span>
+            <div>
+              <p className="font-bold text-sm">Simule ton entretien avec l&apos;IA coach</p>
+              <p className="text-[11px] text-gray-400">Feature Pro — L&apos;IA joue le recruteur et te donne du feedback.</p>
+            </div>
+          </div>
+          <Link href="/pricing" className="text-xs bg-indigo-600 text-white px-4 py-2 rounded-xl font-bold shrink-0">
+            Upgrade
+          </Link>
+        </div>
+      )}
+
       {/* ━━━ GENERATED CONTENT ━━━ */}
       {app.status !== "analyzed" && <ContentTabs application={app} />}
     </div>
