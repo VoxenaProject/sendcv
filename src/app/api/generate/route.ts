@@ -26,10 +26,10 @@ export async function POST(request: Request) {
 
   // Vérifier le droit de générer
   const plan = (profile as unknown as { plan: string }).plan || "free";
-  const freeUsed = (profile as unknown as { free_generation_used: boolean }).free_generation_used || false;
+  const genCount = (profile as unknown as { generation_count: number }).generation_count || 0;
 
-  if (plan === "free" && freeUsed) {
-    return Response.json({ error: "Free generation used", code: "UPGRADE_REQUIRED" }, { status: 402 });
+  if (plan === "free" && genCount >= 3) {
+    return Response.json({ error: "Free generations used (3/3)", code: "UPGRADE_REQUIRED" }, { status: 402 });
   }
 
   const anthropic = getAnthropicClient();
@@ -97,11 +97,11 @@ export async function POST(request: Request) {
   }).eq("id", applicationId);
 
   // Tracker l'usage
-  const genCount = ((profile as unknown as { generation_count: number }).generation_count || 0) + 1;
-  const updateData: Record<string, unknown> = { generation_count: genCount };
-  if (plan === "free") updateData.free_generation_used = true;
-
-  await supabase.from("profiles").update(updateData).eq("id", user.id);
+  const newGenCount = genCount + 1;
+  await supabase.from("profiles").update({
+    generation_count: newGenCount,
+    free_generation_used: plan === "free" && newGenCount >= 3,
+  }).eq("id", user.id);
 
   // Log
   await supabase.from("credit_transactions").insert({

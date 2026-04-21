@@ -14,16 +14,17 @@ export default async function ApplicationDetailPage(props: { params: Promise<{ i
 
   const [appRes, profileRes] = await Promise.all([
     supabase.from("applications").select("*").eq("id", id).eq("user_id", user.id).single(),
-    supabase.from("profiles").select("plan, free_generation_used, experience").eq("id", user.id).single(),
+    supabase.from("profiles").select("plan, generation_count, experience").eq("id", user.id).single(),
   ]);
 
   if (!appRes.data) notFound();
   const app = appRes.data as unknown as Application;
-  const profile = profileRes.data as unknown as { plan: string; free_generation_used: boolean; experience: string | null } | null;
+  const profile = profileRes.data as unknown as { plan: string; generation_count: number; experience: string | null } | null;
   const plan = profile?.plan || "free";
-  const freeUsed = profile?.free_generation_used || false;
+  const genCount = profile?.generation_count || 0;
   const hasProfile = !!profile?.experience?.trim();
-  const canGenerate = plan !== "free" || !freeUsed;
+  const canGenerate = plan !== "free" || genCount < 3;
+  const freeRemaining = Math.max(0, 3 - genCount);
   const a = app.analysis;
 
   return (
@@ -208,9 +209,9 @@ export default async function ApplicationDetailPage(props: { params: Promise<{ i
             <span className="bg-white border border-gray-200 px-3 py-1.5 rounded-full">🔗 LinkedIn optimisé</span>
           </div>
 
-          {plan === "free" && !freeUsed && (
+          {plan === "free" && canGenerate && (
             <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 px-4 py-2 rounded-full">
-              <span className="text-emerald-600 text-xs font-bold">🎁 1ère génération gratuite</span>
+              <span className="text-emerald-600 text-xs font-bold">🎁 {freeRemaining} génération{freeRemaining > 1 ? "s" : ""} gratuite{freeRemaining > 1 ? "s" : ""} restante{freeRemaining > 1 ? "s" : ""}</span>
             </div>
           )}
           {plan !== "free" && (

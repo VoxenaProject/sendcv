@@ -33,12 +33,12 @@ export default function PricingPage() {
 
       <div className="grid md:grid-cols-3 gap-5">
         <PlanCard name="Free" price="0€" sub="Pour découvrir" current={currentPlan === "free"}
-          features={["Analyses illimitées", "1 génération complète offerte", "10 templates CV", "Export PDF", "Double scoring ATS + Recruteur"]}
+          features={["Analyses illimitées", "3 générations complètes", "1 simulation d'entretien", "50 templates CV", "Export PDF", "Double scoring ATS + Recruteur"]}
           cta={currentPlan === "free" ? <Btn disabled label="Plan actuel" /> : <Btn disabled label="Inclus" muted />}
         />
         <PlanCard name="Pro" price="19€" priceSub="/mois" sub="Tout illimité" current={currentPlan === "pro"} popular
-          features={["Générations illimitées", "50 templates × 5 couleurs", "Double scoring ATS + Recruteur", "Export PDF illimité", "Recruiter Insights", "Support prioritaire"]}
-          highlights={[0, 1]}
+          features={["Générations illimitées", "Simulations d'entretien illimitées", "Coach IA — Analyse de refus", "50 templates × 5 couleurs", "Export PDF illimité", "Support prioritaire"]}
+          highlights={[0, 1, 2]}
           cta={currentPlan === "pro" ? <Btn disabled label="Plan actuel ✓" active /> : <Btn onClick={() => handleUpgrade("pro")} label={loading === "pro" ? "Redirection..." : "Passer à Pro"} disabled={!!loading || isPaid} primary />}
         />
         <PlanCard name="Lifetime" price="79€" priceSub=" une fois" sub="Pour toujours" current={currentPlan === "lifetime"}

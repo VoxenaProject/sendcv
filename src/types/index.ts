@@ -156,17 +156,19 @@ export const PLANS = {
     name: "Free",
     price: 0,
     priceDisplay: "0€",
-    description: "Analyses illimitées + 1 génération gratuite",
-    maxGenerations: 1,
-    features: ["Analyses illimitées", "1 génération complète offerte", "10 templates", "Export PDF"],
+    description: "3 candidatures gratuites pour tester",
+    maxGenerations: 3,
+    maxSimulations: 1,
+    features: ["Analyses illimitées", "3 générations complètes", "1 simulation d'entretien", "50 templates CV", "Export PDF", "Double scoring ATS + Recruteur"],
   },
   pro: {
     name: "Pro",
-    price: 1900, // centimes
+    price: 1900,
     priceDisplay: "19€/mois",
     description: "Tout illimité",
     maxGenerations: Infinity,
-    features: ["Générations illimitées", "50 templates × 5 couleurs", "Double scoring ATS + Recruteur", "Export PDF illimité", "Support prioritaire"],
+    maxSimulations: Infinity,
+    features: ["Générations illimitées", "Simulations d'entretien illimitées", "Coach IA — Analyse de refus", "50 templates × 5 couleurs", "Export PDF illimité", "Support prioritaire"],
   },
   lifetime: {
     name: "Lifetime",
@@ -174,6 +176,7 @@ export const PLANS = {
     priceDisplay: "79€",
     description: "Tout illimité, pour toujours",
     maxGenerations: Infinity,
+    maxSimulations: Infinity,
     features: ["Tout ce que Pro inclut", "Paiement unique", "Accès à vie", "Futures fonctionnalités incluses"],
   },
 } as const;
