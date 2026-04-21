@@ -25,7 +25,7 @@ export default function Landing() {
     <div className="min-h-screen bg-white text-[#0f172a]">
 
       {/* NAV */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
+      <nav role="navigation" aria-label="Navigation principale" className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-baseline gap-0.5">
             <span className="text-[22px] font-black tracking-tight">send</span>
@@ -65,8 +65,8 @@ export default function Landing() {
 
             <motion.div variants={fu} className="mt-8">
               <Link href="/signup" className="inline-flex items-center justify-center gap-2 bg-indigo-600 text-white px-8 py-4 rounded-xl font-bold text-[15px] hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-600/20 hover:-translate-y-0.5">
-                3 candidatures gratuites — Créer mon compte
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+                Commencer gratuitement
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
               </Link>
               <p className="mt-3 text-xs text-gray-400">Pas de carte bancaire. 3 candidatures complètes offertes.</p>
             </motion.div>
@@ -133,7 +133,7 @@ export default function Landing() {
 
       {/* ━━━ STAT BAR — REAL DATA ━━━ */}
       <section className="px-6 py-12 bg-gray-900 text-white">
-        <div className="max-w-4xl mx-auto grid grid-cols-3 gap-8 text-center">
+        <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 text-center">
           <div ref={c1.ref}><p className="text-3xl md:text-4xl font-extrabold">{c1.c}%</p><p className="text-xs text-gray-400 mt-1">des CV filtrés par les robots avant un humain</p></div>
           <div ref={c2.ref}><p className="text-3xl md:text-4xl font-extrabold">{c2.c}%</p><p className="text-xs text-gray-400 mt-1">d&apos;offres fictives en Belgique</p></div>
           <div ref={c3.ref}><p className="text-3xl md:text-4xl font-extrabold">{c3.c}</p><p className="text-xs text-gray-400 mt-1">candidatures gratuites pour tester</p></div>
@@ -163,8 +163,8 @@ export default function Landing() {
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={st} className="grid md:grid-cols-3 gap-10">
           {[
             { n: "1", t: "Colle l'offre", d: "Copie la description depuis Indeed, LinkedIn, StepStone ou n'importe où. C'est le seul input.", c: "bg-indigo-600" },
-            { n: "2", t: "L'IA analyse", d: "Double scoring ATS + Recruteur. Mots-clés matchés. Salaire estimé. Red flags détectés. Gratuit.", c: "bg-violet-600" },
-            { n: "3", t: "Tout est généré", d: "CV sur-mesure + lettre + 10 questions d'entretien + tips LinkedIn. Télécharge en PDF.", c: "bg-amber-500" },
+            { n: "2", t: "L'IA analyse", d: "Double scoring ATS + Recruteur. Mots-clés matchés. Salaire estimé. Red flags détectés. Gratuit.", c: "bg-indigo-600" },
+            { n: "3", t: "Tout est généré", d: "CV sur-mesure + lettre + 10 questions d'entretien + tips LinkedIn. Télécharge en PDF.", c: "bg-indigo-600" },
           ].map((s, i) => (
             <motion.div key={i} variants={fu}>
               <div className={`w-12 h-12 ${s.c} text-white rounded-xl font-bold text-lg flex items-center justify-center mb-4`}>{s.n}</div>
@@ -175,7 +175,7 @@ export default function Landing() {
         </motion.div>
         <div className="text-center mt-12">
           <Link href="/signup" className="inline-flex items-center gap-2 bg-indigo-600 text-white px-7 py-3.5 rounded-xl font-bold text-sm hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/15">
-            Essayer gratuitement — 3 candidatures offertes <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+            Commencer gratuitement <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
           </Link>
         </div>
       </Section>
@@ -263,7 +263,7 @@ export default function Landing() {
           <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-3">Garantie Entretien 30 Jours</h2>
           <p className="text-indigo-100 leading-relaxed mb-6">Envoie 10+ candidatures avec SendCV. Zéro entretien en 30 jours ? <strong className="text-white">Remboursement complet.</strong></p>
           <Link href="/signup" className="inline-flex items-center gap-2 bg-white text-indigo-700 px-7 py-3.5 rounded-xl font-bold text-sm hover:bg-indigo-50 transition-colors shadow-lg">
-            Commencer sans risque <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+            Commencer sans risque <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
           </Link>
         </div>
       </section>
@@ -287,7 +287,7 @@ export default function Landing() {
           <h2 className="text-3xl md:text-[2.5rem] font-extrabold leading-tight">Prêt à décrocher des entretiens ?</h2>
           <p className="text-gray-400 mt-4 mb-8 text-lg">3 candidatures gratuites. Pas de carte bancaire.</p>
           <Link href="/signup" className="inline-flex items-center gap-2 bg-indigo-600 text-white px-9 py-4 rounded-xl font-bold text-base hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-600/20 hover:-translate-y-0.5">
-            Créer mon compte gratuitement <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+            Commencer gratuitement <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
           </Link>
         </div>
       </section>
