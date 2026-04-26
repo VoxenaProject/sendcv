@@ -77,7 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col bg-white text-[#0f172a] overscroll-none">
+      <body className="min-h-full flex flex-col overscroll-none">
         {children}
         <script dangerouslySetInnerHTML={{ __html: `if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js')}` }} />
       </body>
