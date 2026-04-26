@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 
@@ -102,21 +103,34 @@ export default function Landing() {
               Colle une offre d&apos;emploi. Reçois ton CV sur-mesure, ta lettre de motivation et ta préparation d&apos;entretien. En 60 secondes.
             </motion.p>
 
-            <motion.div variants={reveal} className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Link href="/signup" className="text-[15px] font-medium bg-[#0071e3] text-white px-7 py-3 rounded-full hover:bg-[#0077ED] transition-all">
-                Commencer gratuitement
-              </Link>
-              <Link href="#demo" className="text-[15px] font-medium text-[#0071e3] hover:underline transition-all">
-                Essayer la démo →
-              </Link>
+            <motion.div variants={reveal} className="mt-8">
+              <HeroEmailCapture />
             </motion.div>
             <motion.p variants={reveal} className="mt-4 text-xs text-gray-400">3 candidatures offertes. Sans carte bancaire.</motion.p>
+            <motion.div variants={reveal} className="mt-3">
+              <Link href="#demo" className="text-[14px] text-[#0071e3] hover:underline transition-all">
+                Ou essaie la démo sans compte →
+              </Link>
+            </motion.div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* ━━━ SOCIAL COUNTER ━━━ */}
+      <section className="px-6 pb-6">
+        <div className="flex items-center justify-center gap-2 text-xs text-gray-400">
+          <div className="flex -space-x-1.5">
+            {["bg-indigo-400", "bg-violet-400", "bg-emerald-400", "bg-amber-400"].map((c, i) => (
+              <div key={i} className={`w-5 h-5 rounded-full ${c} border-2 border-white`} />
+            ))}
+          </div>
+          <span>127+ candidatures analysées cette semaine</span>
         </div>
       </section>
 
       {/* ━━━ LIVE DEMO ━━━ */}
       <section id="demo" className="px-6 pb-20 md:pb-28">
+        <p className="text-center text-sm text-gray-500 mb-4">Essaie gratuitement — colle une offre d&apos;emploi</p>
         <div className="max-w-3xl mx-auto">
           <LiveDemo />
         </div>
@@ -333,8 +347,9 @@ function scoreColor(value: number): string {
 
 function LiveDemo() {
   const [input, setInput] = useState("");
-  const [phase, setPhase] = useState<"input" | "analyzing" | "result">("input");
+  const [phase, setPhase] = useState<"input" | "analyzing" | "email_gate" | "result">("input");
   const [analyzeStep, setAnalyzeStep] = useState(0);
+  const [demoEmail, setDemoEmail] = useState("");
   const [result, setResult] = useState<{
     title: string; company: string; salary_estimate: string;
     keywords: { word: string; importance: string }[];
@@ -373,6 +388,11 @@ function LiveDemo() {
 
     if (!res.ok) { setError(data.error); setPhase("input"); return; }
     setResult(data);
+    setPhase("email_gate");
+  }
+
+  function handleEmailSubmit() {
+    if (!demoEmail.trim() || !demoEmail.includes("@")) return;
     setPhase("result");
   }
 
@@ -422,6 +442,34 @@ function LiveDemo() {
                 </motion.div>
               ))}
             </div>
+          </motion.div>
+        )}
+
+        {/* ━━━ EMAIL GATE ━━━ */}
+        {phase === "email_gate" && result && (
+          <motion.div key="email_gate" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-8 sm:p-10 flex flex-col items-center justify-center min-h-[320px] text-center">
+            <div className="w-14 h-14 rounded-2xl bg-emerald-500 flex items-center justify-center mb-5">
+              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+            </div>
+            <p className="text-[17px] font-semibold text-white mb-1">Analyse terminée</p>
+            <p className="text-[13px] text-gray-400 mb-1">{result.title} — {result.company}</p>
+            <p className="text-[13px] text-gray-500 mb-6">Score ATS : <span className="text-white font-semibold">{result.ats_score}%</span> · Recruteur : <span className="text-white font-semibold">{result.recruiter_score}%</span></p>
+
+            <p className="text-[14px] text-gray-300 mb-4">Entre ton email pour voir les résultats complets.</p>
+
+            <div className="flex w-full max-w-sm gap-2">
+              <input type="email" value={demoEmail} onChange={(e) => setDemoEmail(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleEmailSubmit()}
+                placeholder="ton@email.com"
+                className="flex-1 px-4 py-3 rounded-xl bg-white/[0.06] border border-white/[0.1] text-[14px] text-white placeholder-gray-600 focus:outline-none focus:border-white/25 transition-all" />
+              <button onClick={handleEmailSubmit} disabled={!demoEmail.includes("@")}
+                className={`px-5 py-3 rounded-xl font-medium text-[14px] transition-all cursor-pointer shrink-0 ${
+                  demoEmail.includes("@") ? "bg-[#0071e3] text-white hover:bg-[#0077ED]" : "bg-white/[0.04] text-gray-600 cursor-not-allowed"
+                }`}>
+                Voir les résultats
+              </button>
+            </div>
+            <p className="text-[11px] text-gray-600 mt-3">Pas de spam. Juste tes résultats.</p>
           </motion.div>
         )}
 
@@ -503,8 +551,8 @@ function LiveDemo() {
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-2.5">
-              <Link href="/signup" className="flex-1 text-center py-3.5 rounded-xl bg-[#0071e3] text-white font-medium text-[14px] hover:bg-[#0077ED] transition-all">
-                Recevoir le CV complet
+              <Link href={`/signup?email=${encodeURIComponent(demoEmail)}`} className="flex-1 text-center py-3.5 rounded-xl bg-[#0071e3] text-white font-medium text-[14px] hover:bg-[#0077ED] transition-all">
+                Créer mon compte et recevoir le CV
               </Link>
               <button onClick={() => { setResult(null); setInput(""); setPhase("input"); }}
                 className="py-3 px-5 rounded-xl bg-white/[0.06] text-gray-400 text-[13px] hover:bg-white/[0.1] transition-all cursor-pointer">
@@ -516,6 +564,30 @@ function LiveDemo() {
         )}
       </AnimatePresence>
     </motion.div>
+  );
+}
+
+// ━━━ HERO EMAIL CAPTURE ━━━
+function HeroEmailCapture() {
+  const [email, setEmail] = useState("");
+  const router = useRouter();
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email.includes("@")) return;
+    router.push(`/signup?email=${encodeURIComponent(email)}`);
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center justify-center gap-2 max-w-md mx-auto">
+      <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
+        placeholder="Ton email"
+        className="w-full sm:flex-1 px-5 py-3.5 rounded-full border border-gray-200 text-[15px] text-center sm:text-left focus:outline-none focus:border-gray-400 transition-all" />
+      <button type="submit"
+        className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-[#0071e3] text-white font-medium text-[15px] hover:bg-[#0077ED] transition-all shrink-0 cursor-pointer">
+        Commencer
+      </button>
+    </form>
   );
 }
 
