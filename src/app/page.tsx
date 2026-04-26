@@ -69,154 +69,111 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-white text-[#0f172a] overflow-x-hidden">
 
-      {/* ━━━ NAV — Glass ━━━ */}
-      <nav role="navigation" aria-label="Navigation principale" className="sticky top-0 z-50 bg-white/70 backdrop-blur-2xl border-b border-gray-100/50">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-baseline gap-0.5">
-            <span className="text-[22px] font-black tracking-tight">send</span>
-            <span className="text-[22px] font-black tracking-tight bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">cv</span>
-            <span className="text-[9px] text-gray-300 font-semibold">.ai</span>
+      {/* ━━━ NAV — Apple clean ━━━ */}
+      <nav role="navigation" aria-label="Navigation principale" className="sticky top-0 z-50 bg-white/80 backdrop-blur-3xl border-b border-black/[0.04]">
+        <div className="max-w-5xl mx-auto px-6 h-12 flex items-center justify-between">
+          <Link href="/" className="text-[15px] font-semibold tracking-tight text-black">
+            sendcv<span className="text-gray-400">.ai</span>
           </Link>
-          <div className="flex items-center gap-3">
-            <Link href="/login" className="hidden sm:block text-sm text-gray-500 hover:text-gray-900 px-3 py-2 transition-colors">Connexion</Link>
-            <Link href="/signup" className="text-sm font-semibold bg-gray-900 text-white px-5 py-2.5 rounded-full hover:bg-gray-800 transition-all shadow-lg shadow-gray-900/10">
-              Commencer gratuitement
+          <div className="flex items-center gap-4">
+            <Link href="/login" className="hidden sm:block text-xs text-gray-500 hover:text-black transition-colors">Connexion</Link>
+            <Link href="/signup" className="text-xs font-medium bg-[#0071e3] text-white px-4 py-1.5 rounded-full hover:bg-[#0077ED] transition-all">
+              Commencer
             </Link>
           </div>
         </div>
       </nav>
 
-      {/* ━━━ HERO — Dramatic ━━━ */}
-      <section className="relative px-6 pt-24 pb-16 md:pt-36 md:pb-24 overflow-hidden">
-        {/* Background glow */}
-        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-indigo-100/50 rounded-full blur-[120px] pointer-events-none" />
-
-        <div className="relative max-w-4xl mx-auto">
-          <motion.div initial="hidden" animate="visible" variants={stagger} className="text-center">
-            {/* Badge */}
-            <motion.div variants={reveal} className="inline-flex items-center gap-2 bg-red-50 border border-red-100 rounded-full px-5 py-2 mb-10">
-              <div className="w-1.5 h-1.5 bg-red-500 rounded-full" />
-              <span className="text-xs font-semibold text-red-800">59% de tes candidatures ne sont jamais vues par un humain</span>
-            </motion.div>
-
-            {/* Headline — DRAMATIC */}
-            <motion.h1 variants={reveal} className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold leading-[0.95] tracking-tight">
-              Arrête d&apos;envoyer
-              <br />
-              <span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-600 bg-clip-text text-transparent">
-                le même CV.
-              </span>
-            </motion.h1>
-
-            {/* Subheadline */}
-            <motion.p variants={reveal} className="mt-8 text-xl md:text-2xl text-gray-500 max-w-2xl mx-auto leading-relaxed font-light">
-              SendCV personnalise <strong className="text-gray-900 font-semibold">chaque candidature</strong> en 60 secondes.
-              CV, lettre, entretien — optimisés pour les robots <em>et</em> les recruteurs.
+      {/* ━━━ HERO — Apple minimal ━━━ */}
+      <section className="px-6 pt-20 pb-10 md:pt-32 md:pb-16">
+        <div className="max-w-3xl mx-auto text-center">
+          <motion.div initial="hidden" animate="visible" variants={stagger}>
+            <motion.p variants={reveal} className="text-sm text-gray-500 mb-6">
+              59% de tes candidatures ne sont jamais vues par un humain.
             </motion.p>
 
-            {/* CTA */}
-            <motion.div variants={reveal} className="mt-10 flex flex-col items-center gap-4">
-              <Link href="/signup" className="group inline-flex items-center gap-3 bg-gray-900 text-white pl-8 pr-6 py-4 rounded-full font-semibold text-base hover:bg-gray-800 transition-all shadow-2xl shadow-gray-900/20 hover:-translate-y-0.5">
+            <motion.h1 variants={reveal} className="text-5xl sm:text-6xl md:text-7xl font-semibold leading-[1.05] tracking-[-0.02em] text-black">
+              Chaque candidature.
+              <br />
+              <span className="text-gray-300">Personnalisée par l&apos;IA.</span>
+            </motion.h1>
+
+            <motion.p variants={reveal} className="mt-6 text-lg text-gray-500 max-w-lg mx-auto leading-relaxed">
+              Colle une offre d&apos;emploi. Reçois ton CV sur-mesure, ta lettre de motivation et ta préparation d&apos;entretien. En 60 secondes.
+            </motion.p>
+
+            <motion.div variants={reveal} className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Link href="/signup" className="text-[15px] font-medium bg-[#0071e3] text-white px-7 py-3 rounded-full hover:bg-[#0077ED] transition-all">
                 Commencer gratuitement
-                <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
-                </div>
               </Link>
-              <p className="text-sm text-gray-400">3 candidatures complètes offertes · Pas de carte bancaire</p>
+              <Link href="#demo" className="text-[15px] font-medium text-[#0071e3] hover:underline transition-all">
+                Essayer la démo →
+              </Link>
             </motion.div>
+            <motion.p variants={reveal} className="mt-4 text-xs text-gray-400">3 candidatures offertes. Sans carte bancaire.</motion.p>
           </motion.div>
         </div>
       </section>
 
-      {/* ━━━ LIVE DEMO — The WOW moment ━━━ */}
-      <section className="px-6 pb-24 -mt-8">
-        <div className="max-w-4xl mx-auto">
+      {/* ━━━ LIVE DEMO ━━━ */}
+      <section id="demo" className="px-6 pb-20 md:pb-28">
+        <div className="max-w-3xl mx-auto">
           <LiveDemo />
         </div>
       </section>
 
-      {/* ━━━ HOW IT WORKS — Numbered ━━━ */}
-      <section className="px-6 py-28 md:py-36">
-        <div className="max-w-4xl mx-auto">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={stagger}>
-            <motion.p variants={reveal} className="text-xs font-bold text-indigo-600 uppercase tracking-[0.2em] text-center mb-3">Comment ça marche</motion.p>
-            <motion.h2 variants={reveal} className="text-4xl md:text-5xl font-extrabold text-center leading-tight mb-20">
-              1 offre. 60 secondes.<br /><span className="text-gray-300">Tout est fait.</span>
+      {/* ━━�� HOW IT WORKS — Apple clean ━━━ */}
+      <section className="px-6 py-24 md:py-32 bg-[#f5f5f7]">
+        <div className="max-w-3xl mx-auto text-center">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
+            <motion.h2 variants={reveal} className="text-4xl md:text-5xl font-semibold tracking-[-0.02em] mb-16">
+              1 offre. 60 secondes.
             </motion.h2>
-
-            <div className="grid md:grid-cols-3 gap-12">
+            <div className="grid md:grid-cols-3 gap-8 text-left">
               {[
-                { n: "01", t: "Colle l'offre", d: "Copie la description depuis n'importe quel site d'emploi. C'est le seul input nécessaire." },
-                { n: "02", t: "Double analyse", d: "Score ATS (robots) + Score Recruteur (humain). Mots-clés matchés, salaire estimé, red flags. Gratuit." },
-                { n: "03", t: "Tout est généré", d: "CV sur-mesure, lettre de motivation, 10 questions d'entretien, tips LinkedIn. Télécharge en PDF." },
-              ].map((step, i) => (
+                { n: "1", t: "Colle l'offre", d: "Copie la description du poste depuis n'importe où. C'est tout." },
+                { n: "2", t: "Analyse gratuite", d: "Score ATS et Recruteur. Mots-clés. Salaire estimé. Instantané." },
+                { n: "3", t: "Candidature complète", d: "CV, lettre, 10 questions d'entretien. Télécharge en PDF." },
+              ].map((s, i) => (
                 <motion.div key={i} variants={reveal}>
-                  <span className="text-6xl font-extrabold text-gray-100">{step.n}</span>
-                  <h3 className="text-xl font-bold mt-2 mb-3">{step.t}</h3>
-                  <p className="text-gray-500 leading-relaxed">{step.d}</p>
+                  <p className="text-5xl font-semibold text-gray-200 mb-3">{s.n}</p>
+                  <h3 className="text-lg font-semibold mb-1">{s.t}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{s.d}</p>
                 </motion.div>
               ))}
             </div>
           </motion.div>
         </div>
       </section>
-
-      {/* ━━━ BENTO GRID FEATURES ━━━ */}
-      <section className="px-6 py-28 bg-[#fafbfc]">
+      {/* ━━━ FEATURES — Apple grid ━━━ */}
+      <section className="px-6 py-24 md:py-32">
         <div className="max-w-5xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} variants={stagger}>
-            <motion.p variants={reveal} className="text-xs font-bold text-indigo-600 uppercase tracking-[0.2em] text-center mb-3">Tout compris</motion.p>
-            <motion.h2 variants={reveal} className="text-4xl md:text-5xl font-extrabold text-center mb-16">
-              Ce qu&apos;aucun autre outil<br /><span className="text-gray-300">ne fait.</span>
+            <motion.h2 variants={reveal} className="text-4xl md:text-5xl font-semibold tracking-[-0.02em] text-center mb-6">
+              Ce qu&apos;aucun autre outil ne fait.
             </motion.h2>
+            <motion.p variants={reveal} className="text-center text-lg text-gray-400 mb-16 max-w-lg mx-auto">Chaque candidature est analysée, optimisée et personnalisée. Pas remplie dans un template.</motion.p>
 
-            {/* Bento grid */}
-            <div className="grid grid-cols-1 md:grid-cols-6 gap-3">
-              {/* Large card */}
-              <motion.div variants={reveal} className="md:col-span-4 group p-8 rounded-3xl bg-white border border-gray-200/60 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-500">
-                <span className="text-3xl">📊</span>
-                <h3 className="text-xl font-bold mt-4 mb-2 group-hover:text-indigo-700 transition-colors">Double scoring unique</h3>
-                <p className="text-gray-500 leading-relaxed max-w-md">Score ATS (robots) + Score Recruteur (humain). Tu sais exactement pourquoi ta candidature va marcher — ou pas. Aucun concurrent ne fait ça.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <motion.div variants={reveal} className="p-8 rounded-2xl bg-black text-white md:col-span-2">
+                <p className="text-sm text-gray-400 font-medium mb-2">Exclusif</p>
+                <h3 className="text-2xl font-semibold mb-2">Double scoring</h3>
+                <p className="text-gray-400 max-w-lg">Score ATS (filtres automatiques) + Score Recruteur (impact humain). Tu sais pourquoi ta candidature va marcher — ou pas. Personne d&apos;autre ne fait les deux.</p>
               </motion.div>
 
-              {/* Small card */}
-              <motion.div variants={reveal} className="md:col-span-2 group p-8 rounded-3xl bg-white border border-gray-200/60 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-500">
-                <span className="text-3xl">🎤</span>
-                <h3 className="text-lg font-bold mt-4 mb-2">Simulation d&apos;entretien</h3>
-                <p className="text-sm text-gray-500">L&apos;IA joue le recruteur. Feedback en temps réel.</p>
-              </motion.div>
-
-              <motion.div variants={reveal} className="md:col-span-2 group p-8 rounded-3xl bg-white border border-gray-200/60 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-500">
-                <span className="text-3xl">📄</span>
-                <h3 className="text-lg font-bold mt-4 mb-2">CV réécrit, pas rempli</h3>
-                <p className="text-sm text-gray-500">Chaque bullet point avec des chiffres d&apos;impact.</p>
-              </motion.div>
-
-              <motion.div variants={reveal} className="md:col-span-2 group p-8 rounded-3xl bg-white border border-gray-200/60 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-500">
-                <span className="text-3xl">✉️</span>
-                <h3 className="text-lg font-bold mt-4 mb-2">Lettre personnalisée</h3>
-                <p className="text-sm text-gray-500">Pour CETTE entreprise. Pas un template.</p>
-              </motion.div>
-
-              <motion.div variants={reveal} className="md:col-span-2 group p-8 rounded-3xl bg-white border border-gray-200/60 hover:border-indigo-200 hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-500">
-                <span className="text-3xl">🇫🇷🇧🇪</span>
-                <h3 className="text-lg font-bold mt-4 mb-2">France & Belgique</h3>
-                <p className="text-sm text-gray-500">CECR, 13ème mois, conventions locales natives.</p>
-              </motion.div>
-
-              {/* Full width card */}
-              <motion.div variants={reveal} className="md:col-span-6 group p-8 rounded-3xl bg-gradient-to-r from-gray-900 to-gray-800 text-white hover:shadow-2xl hover:shadow-gray-900/20 transition-all duration-500">
-                <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-                  <div className="flex-1">
-                    <span className="text-3xl">🎯</span>
-                    <h3 className="text-xl font-bold mt-3 mb-2">10 questions d&apos;entretien + réponses optimales</h3>
-                    <p className="text-gray-400">Basées sur TON profil et CE poste. Méthode STAR, chiffres concrets, adaptées au marché local.</p>
-                  </div>
-                  <Link href="/signup" className="shrink-0 bg-white text-gray-900 px-6 py-3 rounded-full font-bold text-sm hover:bg-gray-100 transition-colors">
-                    Essayer →
-                  </Link>
-                </div>
-              </motion.div>
+              {[
+                { t: "CV sur-mesure", d: "L'IA réécrit chaque ligne avec les mots-clés ATS de l'offre et des chiffres d'impact. Pas un template rempli." },
+                { t: "Lettre de motivation", d: "Personnalisée pour cette entreprise et ce poste. Mentionne des éléments concrets de l'offre." },
+                { t: "Simulation d'entretien", d: "L'IA joue le recruteur. Questions spécifiques au poste. Feedback après chaque réponse." },
+                { t: "10 questions + réponses", d: "Les questions les plus probables avec les réponses optimales. Méthode STAR, chiffres de ton profil." },
+                { t: "50 templates CV", d: "10 designs × 5 palettes. Du Prestige au Terminal. Export PDF en un clic." },
+                { t: "France & Belgique", d: "Conventions CV locales, niveaux CECR, 13ème mois, ATS européens. Pas un outil US traduit." },
+              ].map((f, i) => (
+                <motion.div key={i} variants={reveal} className="group p-7 rounded-2xl bg-[#f5f5f7] hover:bg-[#ececee] transition-colors duration-300">
+                  <h3 className="text-lg font-semibold mb-1.5">{f.t}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{f.d}</p>
+                </motion.div>
+              ))}
             </div>
           </motion.div>
         </div>
