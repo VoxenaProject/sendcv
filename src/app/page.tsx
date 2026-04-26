@@ -309,9 +309,30 @@ export default function Landing() {
 }
 
 // ━━━ LIVE DEMO COMPONENT ━━━
+// Typewriter hook
+function useTypewriter(text: string, speed = 25, startDelay = 0) {
+  const [displayed, setDisplayed] = useState("");
+  const [started, setStarted] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setStarted(true), startDelay); return () => clearTimeout(t); }, [startDelay]);
+  useEffect(() => {
+    if (!started) return;
+    setDisplayed("");
+    let i = 0;
+    const t = setInterval(() => { i++; setDisplayed(text.slice(0, i)); if (i >= text.length) clearInterval(t); }, speed);
+    return () => clearInterval(t);
+  }, [text, speed, started]);
+  return { displayed, done: displayed.length >= text.length };
+}
+
+// Score bar color interpolation
+function scoreColor(value: number): string {
+  if (value >= 70) return "#34d399";
+  if (value >= 40) return "#fbbf24";
+  return "#f87171";
+}
+
 function LiveDemo() {
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
   const [phase, setPhase] = useState<"input" | "analyzing" | "result">("input");
   const [analyzeStep, setAnalyzeStep] = useState(0);
   const [result, setResult] = useState<{
@@ -323,10 +344,12 @@ function LiveDemo() {
   const [error, setError] = useState<string | null>(null);
   const [keywordIndex, setKeywordIndex] = useState(0);
 
+  const insightTyped = useTypewriter(result?.top_insight || "", 20, 1500);
+
   useEffect(() => {
     if (!result || phase !== "result") return;
     if (keywordIndex >= result.keywords.length) return;
-    const t = setTimeout(() => setKeywordIndex((i) => i + 1), 150);
+    const t = setTimeout(() => setKeywordIndex((i) => i + 1), 120);
     return () => clearTimeout(t);
   }, [result, keywordIndex, phase]);
 
@@ -358,28 +381,24 @@ function LiveDemo() {
   const pct = Math.min(100, Math.round((charCount / 50) * 100));
 
   return (
-    <motion.div layout className="rounded-2xl overflow-hidden bg-black text-white">
+    <motion.div layout className="rounded-2xl overflow-hidden bg-[#1d1d1f] text-white">
       <AnimatePresence mode="wait">
+        {/* ━━━ INPUT ━━━ */}
         {phase === "input" && (
           <motion.div key="input" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 sm:p-8">
-            <p className="text-sm text-gray-400 mb-4">Essaie maintenant — sans compte, sans carte.</p>
-            <textarea
-              value={input} onChange={(e) => setInput(e.target.value)} rows={4}
-              placeholder={"Colle une offre d'emploi ici.\nL'IA l'analyse instantanément."}
-              className="w-full px-4 py-3 rounded-xl bg-white/[0.06] border border-white/[0.08] text-sm text-white placeholder-gray-600 leading-relaxed focus:outline-none focus:border-white/20 transition-all resize-none"
-            />
-            {/* Progress bar */}
+            <p className="text-[13px] text-gray-400 mb-4">Essaie maintenant. Sans compte. Sans carte.</p>
+            <textarea value={input} onChange={(e) => setInput(e.target.value)} rows={4}
+              placeholder={"Colle une offre d'emploi ici.\nL'IA l'analyse en quelques secondes."}
+              className="w-full px-4 py-3 rounded-xl bg-white/[0.05] border border-white/[0.08] text-[14px] text-white placeholder-gray-600 leading-relaxed focus:outline-none focus:border-white/20 transition-all resize-none" />
             <div className="mt-3 flex items-center gap-3">
-              <div className="flex-1 h-1 bg-white/[0.06] rounded-full overflow-hidden">
+              <div className="flex-1 h-[3px] bg-white/[0.06] rounded-full overflow-hidden">
                 <motion.div className="h-full rounded-full" animate={{ width: `${pct}%`, backgroundColor: isReady ? "#34d399" : "#6366f1" }} transition={{ duration: 0.3 }} />
               </div>
-              <span className={`text-xs font-mono ${isReady ? "text-emerald-400" : "text-gray-600"}`}>{charCount}/50</span>
+              <span className={`text-[11px] font-mono ${isReady ? "text-emerald-400" : "text-gray-600"}`}>{charCount}/50</span>
             </div>
-
             {error && <p className="text-sm text-red-400 mt-3">{error}</p>}
-
             <button onClick={handleAnalyze} disabled={!isReady}
-              className={`mt-4 w-full py-3.5 rounded-xl font-medium text-sm transition-all cursor-pointer ${
+              className={`mt-4 w-full py-3.5 rounded-xl font-medium text-[14px] transition-all cursor-pointer ${
                 isReady ? "bg-[#0071e3] text-white hover:bg-[#0077ED]" : "bg-white/[0.04] text-gray-600 cursor-not-allowed"
               }`}>
               {isReady ? "Analyser gratuitement" : "Continue à coller l'offre..."}
@@ -387,18 +406,18 @@ function LiveDemo() {
           </motion.div>
         )}
 
+        {/* ━━━ ANALYZING ━━━ */}
         {phase === "analyzing" && (
-          <motion.div key="analyzing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-8 sm:p-12 flex flex-col items-center justify-center min-h-[280px]">
-            {/* Pulsing ring */}
-            <motion.div animate={{ scale: [1, 1.15, 1], opacity: [0.5, 1, 0.5] }} transition={{ duration: 1.5, repeat: Infinity }}
-              className="w-16 h-16 rounded-2xl bg-[#0071e3] flex items-center justify-center mb-6">
-              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>
+          <motion.div key="analyzing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-8 sm:p-12 flex flex-col items-center justify-center min-h-[300px]">
+            <motion.div animate={{ scale: [1, 1.12, 1], opacity: [0.6, 1, 0.6] }} transition={{ duration: 1.5, repeat: Infinity }}
+              className="w-14 h-14 rounded-2xl bg-[#0071e3] flex items-center justify-center mb-6">
+              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>
             </motion.div>
-            <p className="text-sm text-white font-medium mb-6">Analyse en cours</p>
-            <div className="flex gap-8">
-              {["Mots-clés", "Score ATS", "Score Recruteur", "Probabilité"].map((label, i) => (
-                <motion.div key={i} initial={{ opacity: 0.2 }} animate={{ opacity: analyzeStep >= i ? 1 : 0.2 }} className="text-center">
-                  <div className={`w-2 h-2 rounded-full mx-auto mb-1.5 ${analyzeStep >= i ? "bg-[#0071e3]" : "bg-gray-700"}`} />
+            <p className="text-[14px] text-white font-medium mb-8">Analyse en cours</p>
+            <div className="flex gap-10">
+              {["Mots-clés", "ATS", "Recruteur", "Prédiction"].map((label, i) => (
+                <motion.div key={i} animate={{ opacity: analyzeStep >= i ? 1 : 0.15 }} transition={{ duration: 0.4 }} className="text-center">
+                  <div className={`w-2 h-2 rounded-full mx-auto mb-2 transition-colors duration-300 ${analyzeStep >= i ? "bg-[#0071e3]" : "bg-gray-700"}`} />
                   <p className="text-[10px] text-gray-500">{label}</p>
                 </motion.div>
               ))}
@@ -406,50 +425,53 @@ function LiveDemo() {
           </motion.div>
         )}
 
+        {/* ━━━ RESULT ━━━ */}
         {phase === "result" && result && (
           <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 sm:p-8">
             {/* Header */}
-            <div className="flex items-start justify-between mb-6">
+            <div className="flex items-start justify-between mb-7">
               <div>
-                <motion.p initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="text-lg font-semibold">{result.title}</motion.p>
-                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="text-sm text-gray-400">{result.company}</motion.p>
+                <motion.p initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="text-[17px] font-semibold">{result.title}</motion.p>
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }} className="text-[13px] text-gray-500">{result.company}</motion.p>
               </div>
-              <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 }}
-                className="text-right shrink-0 px-3 py-1.5 rounded-lg bg-white/[0.06]">
-                <p className="text-[10px] text-gray-500">Salaire estimé</p>
-                <p className="text-sm font-semibold text-emerald-400">{result.salary_estimate}</p>
+              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.25 }}
+                className="shrink-0 px-3 py-1.5 rounded-lg bg-emerald-500/10">
+                <p className="text-[10px] text-emerald-400/60">Salaire</p>
+                <p className="text-[13px] font-semibold text-emerald-400">{result.salary_estimate}</p>
               </motion.div>
             </div>
 
-            {/* Scores — horizontal bars instead of circles */}
-            <div className="space-y-3 mb-6">
+            {/* Scores — bars with dynamic color */}
+            <div className="space-y-3.5 mb-7">
               {[
-                { label: "Score ATS", value: result.ats_score, color: "#0071e3", delay: 0.1 },
-                { label: "Score Recruteur", value: result.recruiter_score, color: "#a855f7", delay: 0.3 },
-                { label: "Probabilité d'entretien", value: result.interview_probability, color: "#34d399", delay: 0.5 },
+                { label: "Score ATS", value: result.ats_score, delay: 0.1 },
+                { label: "Score Recruteur", value: result.recruiter_score, delay: 0.3 },
+                { label: "Probabilité d'entretien", value: result.interview_probability, delay: 0.5 },
               ].map((s) => (
                 <motion.div key={s.label} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: s.delay }}>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-gray-400">{s.label}</span>
-                    <span className="text-xs font-mono font-semibold" style={{ color: s.color }}>{s.value}%</span>
+                    <span className="text-[12px] text-gray-500">{s.label}</span>
+                    <motion.span className="text-[12px] font-mono font-semibold" initial={{ opacity: 0 }} animate={{ opacity: 1, color: scoreColor(s.value) }} transition={{ delay: s.delay + 0.8 }}>
+                      {s.value}%
+                    </motion.span>
                   </div>
-                  <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
-                    <motion.div className="h-full rounded-full" initial={{ width: 0 }} animate={{ width: `${s.value}%` }}
-                      transition={{ delay: s.delay + 0.2, duration: 1, ease: [0.22, 1, 0.36, 1] }}
-                      style={{ backgroundColor: s.color }} />
+                  <div className="h-[5px] bg-white/[0.05] rounded-full overflow-hidden">
+                    <motion.div className="h-full rounded-full" initial={{ width: 0 }}
+                      animate={{ width: `${s.value}%`, backgroundColor: scoreColor(s.value) }}
+                      transition={{ delay: s.delay + 0.2, duration: 1.2, ease: [0.22, 1, 0.36, 1] }} />
                   </div>
                 </motion.div>
               ))}
             </div>
 
             {/* Keywords */}
-            <div className="mb-6">
-              <p className="text-xs text-gray-500 mb-2">Mots-clés détectés</p>
-              <div className="flex flex-wrap gap-1.5 min-h-[32px]">
+            <div className="mb-7">
+              <p className="text-[11px] text-gray-600 mb-2.5">Mots-clés détectés dans l&apos;offre</p>
+              <div className="flex flex-wrap gap-1.5 min-h-[36px]">
                 {result.keywords.slice(0, keywordIndex).map((kw, i) => (
-                  <motion.span key={i} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-                    className={`px-2.5 py-1 rounded-md text-xs font-medium ${
-                      kw.importance === "critical" ? "bg-[#0071e3]/10 text-[#4d9fff]" :
+                  <motion.span key={i} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+                    className={`px-2.5 py-1 rounded-md text-[11px] font-medium ${
+                      kw.importance === "critical" ? "bg-[#0071e3]/15 text-[#5fa8ff]" :
                       kw.importance === "important" ? "bg-purple-500/10 text-purple-400" :
                       "bg-white/[0.04] text-gray-500"
                     }`}>
@@ -459,23 +481,37 @@ function LiveDemo() {
               </div>
             </div>
 
-            {/* Insight */}
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}
-              className="p-4 rounded-xl bg-white/[0.04] border border-white/[0.06] mb-6">
-              <p className="text-sm text-gray-300">{result.top_insight}</p>
+            {/* Typewriter insight */}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}
+              className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.06] mb-5">
+              <p className="text-[12px] text-gray-300 leading-relaxed">
+                {insightTyped.displayed}<span className={`${insightTyped.done ? "hidden" : ""} text-[#0071e3] animate-pulse`}>|</span>
+              </p>
             </motion.div>
 
-            {/* CTA */}
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Link href="/signup" className="flex-1 text-center py-3 rounded-xl bg-[#0071e3] text-white font-medium text-sm hover:bg-[#0077ED] transition-all">
-                Recevoir le CV + lettre + entretien
+            {/* Mini CV teaser */}
+            <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2.5 }}
+              className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.06] mb-6">
+              <p className="text-[10px] text-gray-600 uppercase tracking-wider mb-2">Aperçu de ton CV optimisé</p>
+              <div className="space-y-1.5 text-[12px] font-mono">
+                <p className="text-white font-semibold">PROFIL</p>
+                <p className="text-gray-400">Professionnel avec une expertise en {result.keywords.filter(k => k.importance === "critical").slice(0, 2).map(k => k.word).join(" et ") || "ce domaine"}.
+                  Résultats mesurables et approche orientée impact.</p>
+                <p className="text-gray-600 text-[10px] italic mt-2">→ Version complète avec ton expérience en créant un compte</p>
+              </div>
+            </motion.div>
+
+            {/* CTAs */}
+            <div className="flex flex-col sm:flex-row gap-2.5">
+              <Link href="/signup" className="flex-1 text-center py-3.5 rounded-xl bg-[#0071e3] text-white font-medium text-[14px] hover:bg-[#0077ED] transition-all">
+                Recevoir le CV complet
               </Link>
               <button onClick={() => { setResult(null); setInput(""); setPhase("input"); }}
-                className="py-3 px-5 rounded-xl bg-white/[0.06] text-gray-400 text-sm hover:bg-white/[0.1] transition-all cursor-pointer">
-                Nouvelle analyse
+                className="py-3 px-5 rounded-xl bg-white/[0.06] text-gray-400 text-[13px] hover:bg-white/[0.1] transition-all cursor-pointer">
+                Réessayer
               </button>
             </div>
-            <p className="text-xs text-gray-600 text-center mt-3">3 candidatures complètes gratuites</p>
+            <p className="text-[11px] text-gray-600 text-center mt-3">3 candidatures complètes gratuites · Sans carte bancaire</p>
           </motion.div>
         )}
       </AnimatePresence>
