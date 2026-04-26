@@ -8,6 +8,13 @@ import { useState, useEffect, useRef } from "react";
 const reveal = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } } } as const;
 const stagger = { visible: { transition: { staggerChildren: 0.08 } } } as const;
 
+function Parallax({ children, offset = 30 }: { children: React.ReactNode; offset?: number }) {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const y = useTransform(scrollYProgress, [0, 1], [offset, -offset]);
+  return <motion.div ref={ref} style={{ y }}>{children}</motion.div>;
+}
+
 export default function Landing() {
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
@@ -79,127 +86,191 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ━━━ 003 — PROCESS ━━━ */}
-      <SectionHeader num="003" title="Comment ça marche" subtitle="Un seul input. 60 secondes. Candidature complète." />
-      <section className="px-6 pb-24">
-        <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-6">
-          {[
-            { step: "01", t: "Colle l'offre", d: "Copie la description depuis n'importe quel site d'emploi.", metric: "1 input" },
-            { step: "02", t: "Double analyse", d: "Score ATS + Score Recruteur. Mots-clés, salaire, red flags.", metric: "Gratuit" },
-            { step: "03", t: "Candidature complète", d: "CV sur-mesure, lettre, 10 questions d'entretien. PDF.", metric: "60 sec" },
-          ].map((s, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-              className="p-6 rounded-2xl bg-white/[0.03] border border-white/[0.06] hover:border-orange-500/20 transition-all duration-300 group">
-              <div className="flex items-center justify-between mb-4">
-                <span className="font-mono text-[11px] text-gray-600">{s.step}</span>
-                <span className="font-mono text-[11px] text-orange-500">{s.metric}</span>
+      {/* ━━━ 003 — PROCESS : Timeline horizontale ━━━ */}
+      <section className="py-28 overflow-hidden">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="flex items-start gap-8 mb-16">
+            <span className="font-mono text-[12px] text-orange-500/60 shrink-0 pt-1">003</span>
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold tracking-[-0.02em]">Comment ça marche</h2>
+              <p className="text-[15px] text-gray-500 mt-2">Un seul input. Trois résultats. 60 secondes.</p>
+            </div>
+          </div>
+
+          {/* Horizontal timeline */}
+          <div className="relative">
+            {/* Connecting line */}
+            <div className="hidden md:block absolute top-8 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-500/30 to-transparent" />
+
+            <div className="grid md:grid-cols-3 gap-8 md:gap-12">
+              {[
+                { step: "01", t: "Colle l'offre", d: "Copie-colle la description depuis Indeed, LinkedIn, ou n'importe où.", metric: "1 seul input", icon: "📋" },
+                { step: "02", t: "Analyse instantanée", d: "Double scoring ATS + Recruteur. Mots-clés, salaire estimé, probabilité d'entretien.", metric: "Gratuit", icon: "📊" },
+                { step: "03", t: "Candidature complète", d: "CV sur-mesure, lettre de motivation, 10 questions d'entretien avec réponses.", metric: "60 secondes", icon: "⚡" },
+              ].map((s, i) => (
+                <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}>
+                  {/* Dot */}
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-4 h-4 rounded-full bg-orange-500 shadow-lg shadow-orange-500/30" />
+                    <span className="font-mono text-[11px] text-orange-500">{s.metric}</span>
+                  </div>
+                  <span className="text-4xl mb-4 block">{s.icon}</span>
+                  <h3 className="text-[18px] font-bold mb-2">{s.t}</h3>
+                  <p className="text-[14px] text-gray-500 leading-relaxed">{s.d}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ━━━ 004 — PRODUCT MOCKUP : Dashboard parallax ━━━ */}
+      <section className="py-20 px-6">
+        <Parallax offset={25}>
+          <div className="max-w-4xl mx-auto rounded-2xl border border-white/[0.06] bg-white/[0.02] p-1 shadow-[0_0_80px_-20px_rgba(249,115,22,0.08)]">
+            <div className="rounded-xl bg-[#0f0f0f] p-6">
+              <div className="flex items-center gap-2 mb-5">
+                <div className="flex gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-gray-700" /><div className="w-2.5 h-2.5 rounded-full bg-gray-700" /><div className="w-2.5 h-2.5 rounded-full bg-gray-700" /></div>
+                <span className="text-[10px] text-gray-600 ml-2 font-mono">app.sendcv.ai — Analyse en cours</span>
               </div>
-              <h3 className="text-[17px] font-semibold mb-2 group-hover:text-orange-400 transition-colors">{s.t}</h3>
-              <p className="text-[14px] text-gray-500 leading-relaxed">{s.d}</p>
+              <div className="grid grid-cols-3 gap-4 mb-5">
+                <div className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.05] text-center">
+                  <p className="text-[10px] text-gray-600 mb-1">Score ATS</p>
+                  <p className="text-2xl font-bold text-orange-500">82%</p>
+                </div>
+                <div className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.05] text-center">
+                  <p className="text-[10px] text-gray-600 mb-1">Score Recruteur</p>
+                  <p className="text-2xl font-bold text-purple-400">74%</p>
+                </div>
+                <div className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.05] text-center">
+                  <p className="text-[10px] text-gray-600 mb-1">Entretien</p>
+                  <p className="text-2xl font-bold text-emerald-400">78%</p>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {["React ✓", "TypeScript ✓", "Node.js ✓", "Agile ✓", "CI/CD ✓"].map((k) => (
+                  <span key={k} className="px-2.5 py-1 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/10">{k}</span>
+                ))}
+                {["PostgreSQL ✕", "AWS ✕"].map((k) => (
+                  <span key={k} className="px-2.5 py-1 rounded text-[10px] font-mono bg-red-500/10 text-red-400 border border-red-500/10">{k}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Parallax>
+        <p className="text-center text-[12px] text-gray-600 mt-4">Double optimisation : filtres ATS + impact recruteur</p>
+      </section>
+
+      {/* ━━━ 005 — FEATURES : Bento grid asymétrique ━━━ */}
+      <section className="py-28 px-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex items-start gap-8 mb-14">
+            <span className="font-mono text-[12px] text-orange-500/60 shrink-0 pt-1">005</span>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-[-0.02em]">Ce qui est inclus.</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-6 gap-3">
+            {/* Large */}
+            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+              className="md:col-span-4 p-8 rounded-2xl bg-gradient-to-br from-orange-500/[0.08] to-transparent border border-orange-500/10">
+              <span className="font-mono text-[11px] text-orange-500">Exclusif</span>
+              <h3 className="text-2xl font-bold mt-3 mb-2">Double scoring ATS + Recruteur</h3>
+              <p className="text-gray-500 max-w-md">Tu sais exactement pourquoi ta candidature va marcher — ou pas. Personne d&apos;autre ne fait les deux.</p>
             </motion.div>
-          ))}
+            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
+              className="md:col-span-2 p-6 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
+              <h3 className="text-[15px] font-semibold mb-1">Simulation d&apos;entretien</h3>
+              <p className="text-[13px] text-gray-500">L&apos;IA joue le recruteur. Feedback en temps réel.</p>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.05 }}
+              className="md:col-span-2 p-6 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
+              <h3 className="text-[15px] font-semibold mb-1">CV réécrit avec impact</h3>
+              <p className="text-[13px] text-gray-500">Mots-clés ATS + chiffres de résultat.</p>
+            </motion.div>
+            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
+              className="md:col-span-2 p-6 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
+              <h3 className="text-[15px] font-semibold mb-1">Lettre personnalisée</h3>
+              <p className="text-[13px] text-gray-500">Pour cette entreprise. Pas un template.</p>
+            </motion.div>
+            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.15 }}
+              className="md:col-span-2 p-6 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
+              <h3 className="text-[15px] font-semibold mb-1">France & Belgique</h3>
+              <p className="text-[13px] text-gray-500">CECR, 13ème mois. Natif.</p>
+            </motion.div>
+
+            {/* Full width dark */}
+            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
+              className="md:col-span-6 p-8 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col md:flex-row items-start md:items-center gap-6">
+              <div className="flex-1">
+                <h3 className="text-[17px] font-bold mb-1">50 templates × 5 palettes = 250 combinaisons</h3>
+                <p className="text-[13px] text-gray-500">Du Prestige au Terminal. Export PDF en un clic.</p>
+              </div>
+              <Link href="/signup" className="shrink-0 px-5 py-2.5 rounded-xl bg-orange-500 text-white text-[13px] font-semibold hover:bg-orange-600 transition-colors">
+                Voir les templates
+              </Link>
+            </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* ━━━ 004 — FEATURES ━━━ */}
-      <SectionHeader num="004" title="Fonctionnalités" subtitle="Ce qu'aucun autre outil ne fait." />
-      <section className="px-6 pb-24">
+      {/* ━━━ 006 — PRICING ━━━ */}
+      <section id="pricing" className="py-28 px-6 bg-white/[0.02]">
         <div className="max-w-4xl mx-auto">
-          {/* Hero feature */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="p-8 rounded-2xl bg-gradient-to-br from-orange-500/10 to-orange-600/5 border border-orange-500/10 mb-6">
-            <span className="font-mono text-[11px] text-orange-500">Exclusif</span>
-            <h3 className="text-2xl font-bold mt-2 mb-2">Double scoring</h3>
-            <p className="text-gray-400 max-w-lg">Score ATS (filtres robots) + Score Recruteur (impact humain). Tu sais pourquoi ta candidature va marcher. Personne d&apos;autre ne fait les deux.</p>
-          </motion.div>
+          <div className="flex items-start gap-8 mb-14">
+            <span className="font-mono text-[12px] text-orange-500/60 shrink-0 pt-1">006</span>
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold tracking-[-0.02em]">Pricing</h2>
+              <p className="text-[15px] text-gray-500 mt-2">Commence gratuitement. Upgrade quand tu veux.</p>
+            </div>
+          </div>
 
-          <div className="grid md:grid-cols-2 gap-4">
-            {[
-              { t: "CV réécrit, pas rempli", d: "Chaque ligne avec les mots-clés ATS de l'offre et des chiffres d'impact." },
-              { t: "Lettre de motivation", d: "Personnalisée pour cette entreprise. Mentionne des éléments concrets de l'offre." },
-              { t: "Simulation d'entretien", d: "L'IA joue le recruteur. Questions spécifiques. Feedback en temps réel." },
-              { t: "10 questions + réponses", d: "Les plus probables pour ce poste. Méthode STAR, chiffres de ton profil." },
-              { t: "50 templates CV", d: "10 designs × 5 palettes. Du Prestige au Terminal. Export PDF." },
-              { t: "France & Belgique", d: "Conventions locales, CECR, 13ème mois. Pas un outil US traduit." },
-            ].map((f, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
-                className="p-6 rounded-2xl bg-white/[0.03] border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300">
-                <h3 className="text-[15px] font-semibold mb-1.5">{f.t}</h3>
-                <p className="text-[13px] text-gray-500 leading-relaxed">{f.d}</p>
-              </motion.div>
-            ))}
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="p-6 rounded-2xl bg-[#0a0a0a] border border-white/[0.06]">
+              <p className="font-mono text-[11px] text-gray-600 mb-4">Free</p>
+              <p className="text-4xl font-bold">0€</p>
+              <p className="text-[13px] text-gray-500 mt-1 mb-6">3 candidatures</p>
+              <ul className="space-y-2 text-[13px] text-gray-400 mb-6">{["Analyses illimitées", "3 générations", "50 templates", "Double scoring"].map((f) => <li key={f} className="flex items-center gap-2"><span className="text-orange-500 text-[10px]">✓</span>{f}</li>)}</ul>
+              <Link href="/signup" className="block w-full py-2.5 rounded-xl bg-white/[0.06] text-center text-[13px] font-medium text-gray-300 hover:bg-white/[0.1] transition-colors">Commencer</Link>
+            </div>
+            <div className="p-6 rounded-2xl bg-gradient-to-b from-orange-500/[0.08] to-[#0a0a0a] border border-orange-500/20 relative">
+              <div className="absolute -top-2.5 left-4 px-3 py-0.5 rounded-full bg-orange-500 text-[10px] font-bold text-white">Recommandé</div>
+              <p className="font-mono text-[11px] text-orange-500 mb-4">Pro</p>
+              <p className="text-4xl font-bold">19€<span className="text-lg font-normal text-gray-600">/mois</span></p>
+              <p className="text-[13px] text-gray-500 mt-1 mb-6">Tout illimité</p>
+              <ul className="space-y-2 text-[13px] text-gray-300 mb-6">{["Générations illimitées", "Simulations illimitées", "Coach IA complet", "Support prioritaire"].map((f) => <li key={f} className="flex items-center gap-2"><span className="text-orange-500 text-[10px]">✓</span>{f}</li>)}</ul>
+              <Link href="/signup" className="block w-full py-2.5 rounded-xl bg-orange-500 text-center text-[13px] font-bold text-white hover:bg-orange-600 transition-colors">Passer à Pro</Link>
+            </div>
+            <div className="p-6 rounded-2xl bg-[#0a0a0a] border border-white/[0.06]">
+              <p className="font-mono text-[11px] text-gray-600 mb-4">Lifetime</p>
+              <p className="text-4xl font-bold">79€</p>
+              <p className="text-[13px] text-gray-500 mt-1 mb-6">Une fois, pour toujours</p>
+              <ul className="space-y-2 text-[13px] text-gray-400 mb-6">{["Tout Pro inclus", "Accès à vie", "Futures features", "Zéro abo"].map((f) => <li key={f} className="flex items-center gap-2"><span className="text-orange-500 text-[10px]">✓</span>{f}</li>)}</ul>
+              <Link href="/signup" className="block w-full py-2.5 rounded-xl bg-white/[0.06] text-center text-[13px] font-medium text-gray-300 hover:bg-white/[0.1] transition-colors">Acheter Lifetime</Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ━━━ 005 — PRICING ━━━ */}
-      <SectionHeader num="005" title="Pricing" subtitle="Transparent. Pas de surprise." />
-      <section id="pricing" className="px-6 pb-24">
-        <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-4">
-          {/* Free */}
-          <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
-            <p className="font-mono text-[11px] text-gray-600 mb-4">Free</p>
-            <p className="text-4xl font-bold">0€</p>
-            <p className="text-[13px] text-gray-500 mt-1 mb-6">3 candidatures complètes</p>
-            <ul className="space-y-2 text-[13px] text-gray-400 mb-6">
-              {["Analyses illimitées", "3 générations", "50 templates", "Double scoring", "1 simulation d'entretien"].map((f) => (
-                <li key={f} className="flex items-center gap-2"><span className="text-orange-500 text-[10px]">✓</span>{f}</li>
-              ))}
-            </ul>
-            <Link href="/signup" className="block w-full py-2.5 rounded-xl bg-white/[0.06] text-center text-[13px] font-medium text-gray-300 hover:bg-white/[0.1] transition-colors">
-              Commencer
-            </Link>
-          </div>
-
-          {/* Pro */}
-          <div className="p-6 rounded-2xl bg-white/[0.05] border border-orange-500/20 relative">
-            <div className="absolute -top-2.5 left-4 px-3 py-0.5 rounded-full bg-orange-500 text-[10px] font-bold text-white">Recommandé</div>
-            <p className="font-mono text-[11px] text-orange-500 mb-4">Pro</p>
-            <p className="text-4xl font-bold">19€<span className="text-lg font-normal text-gray-600">/mois</span></p>
-            <p className="text-[13px] text-gray-500 mt-1 mb-6">Tout illimité</p>
-            <ul className="space-y-2 text-[13px] text-gray-300 mb-6">
-              {["Générations illimitées", "Simulations illimitées", "Coach IA complet", "Support prioritaire"].map((f) => (
-                <li key={f} className="flex items-center gap-2"><span className="text-orange-500 text-[10px]">✓</span>{f}</li>
-              ))}
-            </ul>
-            <Link href="/signup" className="block w-full py-2.5 rounded-xl bg-orange-500 text-center text-[13px] font-bold text-white hover:bg-orange-600 transition-colors">
-              Passer à Pro
-            </Link>
-          </div>
-
-          {/* Lifetime */}
-          <div className="p-6 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
-            <p className="font-mono text-[11px] text-gray-600 mb-4">Lifetime</p>
-            <p className="text-4xl font-bold">79€</p>
-            <p className="text-[13px] text-gray-500 mt-1 mb-6">Paiement unique, à vie</p>
-            <ul className="space-y-2 text-[13px] text-gray-400 mb-6">
-              {["Tout Pro inclus", "Accès à vie", "Futures features", "Zéro abonnement"].map((f) => (
-                <li key={f} className="flex items-center gap-2"><span className="text-orange-500 text-[10px]">✓</span>{f}</li>
-              ))}
-            </ul>
-            <Link href="/signup" className="block w-full py-2.5 rounded-xl bg-white/[0.06] text-center text-[13px] font-medium text-gray-300 hover:bg-white/[0.1] transition-colors">
-              Acheter Lifetime
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ━━━ 006 — GUARANTEE ━━━ */}
-      <section className="px-6 py-20">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center mx-auto mb-6">
-            <span className="text-xl">🛡️</span>
-          </div>
-          <h2 className="text-3xl font-bold mb-3">Garantie Entretien 30 Jours.</h2>
-          <p className="text-gray-500 text-[16px] mb-8">10+ candidatures, zéro entretien ? On te rembourse. Point.</p>
-          <Link href="/signup" className="inline-flex items-center gap-2 bg-orange-500 text-white px-7 py-3 rounded-full font-semibold text-[14px] hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/10">
-            Commencer gratuitement
+      {/* ━━━ 007 — GUARANTEE : Full-width orange ━━━ */}
+      <section className="py-16 bg-orange-500">
+        <div className="max-w-2xl mx-auto text-center px-6">
+          <h2 className="text-3xl font-bold text-white mb-3">Garantie Entretien 30 Jours.</h2>
+          <p className="text-orange-100 text-[16px] mb-8">10+ candidatures, zéro entretien ? On te rembourse. Point.</p>
+          <Link href="/signup" className="inline-flex bg-white text-orange-600 px-7 py-3 rounded-full font-bold text-[14px] hover:bg-orange-50 transition-all shadow-xl">
+            Commencer sans risque
           </Link>
         </div>
       </section>
 
-      {/* ━━━ 007 — FAQ ━━━ */}
-      <SectionHeader num="007" title="Questions & Réponses" subtitle="Les réponses aux questions que tu te poses." />
+      {/* ━━━ 008 — FAQ ━━━ */}
+      <div className="flex items-start gap-8 mb-12 max-w-4xl mx-auto px-6 pt-28">
+        <span className="font-mono text-[12px] text-orange-500/60 shrink-0 pt-1">008</span>
+        <div>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-[-0.02em]">Questions & Réponses</h2>
+          <p className="text-[15px] text-gray-500 mt-2">Simple. Direct.</p>
+        </div>
+      </div>
       <section className="px-6 pb-24">
         <div className="max-w-2xl mx-auto">
           {[
@@ -212,18 +283,18 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ━━━ FINAL CTA ━━━ */}
-      <section className="px-6 py-28">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold leading-tight">
+      {/* ━━━ FINAL CTA — Full viewport bookend ━━━ */}
+      <section className="min-h-[70vh] flex flex-col items-center justify-center px-6 relative">
+        <div className="absolute inset-0 bg-gradient-to-t from-orange-500/[0.03] to-transparent pointer-events-none" />
+        <div className="relative text-center max-w-2xl">
+          <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            className="text-5xl md:text-6xl font-bold leading-[0.95] tracking-[-0.02em]">
             Prêt à décrocher
             <br />
             <span className="text-orange-500">des entretiens ?</span>
-          </h2>
-          <p className="text-gray-500 mt-6 mb-10 text-[16px]">3 candidatures gratuites. Sans carte bancaire.</p>
-          <Link href="/signup" className="inline-flex items-center gap-2 bg-orange-500 text-white px-8 py-3.5 rounded-full font-semibold text-[15px] hover:bg-orange-600 transition-all shadow-xl shadow-orange-500/15">
-            Commencer gratuitement
-          </Link>
+          </motion.h2>
+          <p className="text-gray-500 mt-8 mb-10 text-[17px]">3 candidatures gratuites. Sans carte bancaire.</p>
+          <HeroEmailCapture />
         </div>
       </section>
 
