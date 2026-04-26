@@ -91,12 +91,12 @@ export default function Landing() {
         </div>
       </nav>
 
-      {/* ━━━ CHAPTER 1: THE PAIN — Full viewport ━━━ */}
+      {/* ━━━ 001 — THE PAIN ━━━ */}
       <section ref={heroRef} className="min-h-screen flex flex-col items-center justify-center px-6 relative">
         <motion.div style={{ opacity: heroOpacity, scale: heroScale, y: heroY }} className="text-center max-w-4xl">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
-            className="text-orange-600 font-bold text-sm tracking-widest uppercase mb-8">
-            Le problème
+            className="font-mono text-[11px] text-orange-500 tracking-[0.3em] uppercase mb-8">
+            001 — Le problème
           </motion.p>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8 }}
             className="text-6xl sm:text-7xl md:text-8xl lg:text-[6.5rem] font-extrabold leading-[0.95] tracking-[-0.03em]">
@@ -117,11 +117,11 @@ export default function Landing() {
         </motion.div>
       </section>
 
-      {/* ━━━ CHAPTER 2: THE SOLUTION ━━━ */}
+      {/* ━━━ 002 — THE SOLUTION ━━━ */}
       <section className="min-h-[70vh] flex flex-col items-center justify-center px-6 relative">
         <motion.div initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-20%" }} transition={{ duration: 0.8 }}
           className="text-center max-w-3xl">
-          <p className="text-orange-600 font-bold text-sm tracking-widest uppercase mb-6">La solution</p>
+          <p className="font-mono text-[11px] text-orange-500 tracking-[0.3em] uppercase mb-6">002 — La solution</p>
           <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-[1] tracking-[-0.02em]">
             SendCV personnalise
             <br />
@@ -147,7 +147,7 @@ export default function Landing() {
         <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.7 }}
           className="max-w-3xl mx-auto">
           <div className="text-center mb-8">
-            <p className="text-orange-600 font-bold text-sm tracking-widest uppercase mb-3">Essaie maintenant</p>
+            <p className="font-mono text-[11px] text-orange-500 tracking-[0.3em] uppercase mb-3">003 — Essaie maintenant</p>
             <h2 className="text-3xl md:text-4xl font-extrabold">Colle une offre. Regarde ce qui se passe.</h2>
             <div className="flex items-center justify-center gap-2 text-xs text-gray-400 mt-4">
               <div className="flex -space-x-1.5">
@@ -166,7 +166,7 @@ export default function Landing() {
       <section className="px-6 py-24 md:py-32 bg-[#f5f0eb]">
         <div className="max-w-3xl mx-auto text-center">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-            <motion.p variants={reveal} className="text-orange-600 font-bold text-sm tracking-widest uppercase mb-4">Comment ça marche</motion.p>
+            <motion.p variants={reveal} className="font-mono text-[11px] text-orange-500 tracking-[0.3em] uppercase mb-4">004 — Comment ça marche</motion.p>
             <motion.h2 variants={reveal} className="text-4xl md:text-5xl font-extrabold tracking-[-0.02em] mb-16">
               1 offre. 60 secondes.<br /><span className="text-orange-500">Tout est fait.</span>
             </motion.h2>
@@ -190,10 +190,11 @@ export default function Landing() {
       <section className="px-6 py-24 md:py-32">
         <div className="max-w-5xl mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} variants={stagger}>
-            <motion.h2 variants={reveal} className="text-4xl md:text-5xl font-semibold tracking-[-0.02em] text-center mb-6">
+            <motion.p variants={reveal} className="font-mono text-[11px] text-orange-500 tracking-[0.3em] uppercase text-center mb-4">005 — Fonctionnalités</motion.p>
+            <motion.h2 variants={reveal} className="text-4xl md:text-5xl font-extrabold tracking-[-0.02em] text-center mb-6">
               Ce qu&apos;aucun autre outil ne fait.
             </motion.h2>
-            <motion.p variants={reveal} className="text-center text-lg text-gray-400 mb-16 max-w-lg mx-auto">Chaque candidature est analysée, optimisée et personnalisée. Pas remplie dans un template.</motion.p>
+            <motion.p variants={reveal} className="text-center text-lg text-gray-500 mb-16 max-w-lg mx-auto">Analysé. Optimisé. Personnalisé. Pas rempli dans un template.</motion.p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <motion.div variants={reveal} className="p-8 rounded-2xl bg-black text-white md:col-span-2">
@@ -253,7 +254,7 @@ export default function Landing() {
       <section className="px-6 py-28 bg-[#fafbfc]">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-            <motion.p variants={reveal} className="text-xs font-bold text-indigo-600 uppercase tracking-[0.2em] mb-3">Pricing</motion.p>
+            <motion.p variants={reveal} className="font-mono text-[11px] text-orange-500 tracking-[0.3em] uppercase mb-3">006 — Pricing</motion.p>
             <motion.h2 variants={reveal} className="text-4xl md:text-5xl font-extrabold mb-4">
               Commence gratuitement.
             </motion.h2>
