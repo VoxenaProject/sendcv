@@ -67,11 +67,17 @@ const reveal = {
 const stagger = { visible: { transition: { staggerChildren: 0.1 } } } as const;
 
 export default function Landing() {
+  const heroRef = useRef(null);
+  const { scrollYProgress: heroProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const heroOpacity = useTransform(heroProgress, [0, 0.5], [1, 0]);
+  const heroScale = useTransform(heroProgress, [0, 0.5], [1, 0.95]);
+  const heroY = useTransform(heroProgress, [0, 0.5], [0, -50]);
+
   return (
     <div className="min-h-screen bg-[#faf9f6] text-[#1a1a1a] overflow-x-hidden">
 
       {/* ━━━ NAV ━━━ */}
-      <nav role="navigation" aria-label="Navigation principale" className="sticky top-0 z-50 bg-[#faf9f6]/80 backdrop-blur-3xl border-b border-black/[0.04]">
+      <nav role="navigation" aria-label="Navigation principale" className="fixed top-0 left-0 right-0 z-50 bg-[#faf9f6]/60 backdrop-blur-2xl">
         <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link href="/" className="text-[17px] font-bold tracking-tight text-[#1a1a1a]">
             sendcv<span className="text-orange-400">.ai</span>
@@ -85,63 +91,84 @@ export default function Landing() {
         </div>
       </nav>
 
-      {/* ━━━ HERO ━━━ */}
-      <section className="px-6 pt-20 pb-10 md:pt-32 md:pb-16">
-        <div className="max-w-3xl mx-auto text-center">
-          <motion.div initial="hidden" animate="visible" variants={stagger}>
-            <motion.p variants={reveal} className="text-sm text-orange-600 font-semibold mb-6">
-              59% de tes candidatures ne sont jamais vues par un humain.
-            </motion.p>
-
-            <motion.h1 variants={reveal} className="text-5xl sm:text-6xl md:text-7xl font-extrabold leading-[1.05] tracking-[-0.02em] text-[#1a1a1a]">
-              Fini les candidatures
-              <br />
-              <span className="text-orange-500">à l&apos;aveugle.</span>
-            </motion.h1>
-
-            <motion.p variants={reveal} className="mt-6 text-lg text-gray-600 max-w-lg mx-auto leading-relaxed">
-              Colle une offre. L&apos;IA crée ton CV sur-mesure, ta lettre et ta prep d&apos;entretien. Personnalisé pour <strong className="text-[#1a1a1a]">chaque poste</strong>. En 60 secondes.
-            </motion.p>
-
-            <motion.div variants={reveal} className="mt-8">
-              <HeroEmailCapture />
-            </motion.div>
-            <motion.p variants={reveal} className="mt-4 text-xs text-gray-400">3 candidatures offertes. Sans carte bancaire.</motion.p>
-            <motion.div variants={reveal} className="mt-3">
-              <Link href="#demo" className="text-[14px] text-orange-600 font-medium hover:underline transition-all">
-                Ou essaie la démo sans compte →
-              </Link>
-            </motion.div>
+      {/* ━━━ CHAPTER 1: THE PAIN — Full viewport ━━━ */}
+      <section ref={heroRef} className="min-h-screen flex flex-col items-center justify-center px-6 relative">
+        <motion.div style={{ opacity: heroOpacity, scale: heroScale, y: heroY }} className="text-center max-w-4xl">
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
+            className="text-orange-600 font-bold text-sm tracking-widest uppercase mb-8">
+            Le problème
+          </motion.p>
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8 }}
+            className="text-6xl sm:text-7xl md:text-8xl lg:text-[6.5rem] font-extrabold leading-[0.95] tracking-[-0.03em]">
+            Tu envoies le
+            <br />
+            même CV
+            <br />
+            <span className="text-orange-500">partout.</span>
+          </motion.h1>
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }}
+            className="mt-8 text-xl text-gray-500 max-w-md mx-auto leading-relaxed">
+            Et 59% de tes candidatures ne sont jamais vues par un humain.
+          </motion.p>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }}
+            className="mt-4 text-sm text-gray-400 animate-bounce">
+            Scroll ↓
           </motion.div>
-        </div>
+        </motion.div>
       </section>
 
-      {/* ━━━ SOCIAL COUNTER ━━━ */}
-      <section className="px-6 pb-6">
-        <div className="flex items-center justify-center gap-2 text-xs text-gray-400">
-          <div className="flex -space-x-1.5">
-            {["bg-orange-400", "bg-rose-400", "bg-amber-400", "bg-red-300"].map((c, i) => (
-              <div key={i} className={`w-5 h-5 rounded-full ${c} border-2 border-white`} />
-            ))}
+      {/* ━━━ CHAPTER 2: THE SOLUTION ━━━ */}
+      <section className="min-h-[70vh] flex flex-col items-center justify-center px-6 relative">
+        <motion.div initial={{ opacity: 0, y: 60 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-20%" }} transition={{ duration: 0.8 }}
+          className="text-center max-w-3xl">
+          <p className="text-orange-600 font-bold text-sm tracking-widest uppercase mb-6">La solution</p>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-[1] tracking-[-0.02em]">
+            SendCV personnalise
+            <br />
+            <span className="text-orange-500">chaque candidature.</span>
+          </h2>
+          <p className="mt-6 text-lg text-gray-600 max-w-lg mx-auto leading-relaxed">
+            Colle une offre. L&apos;IA crée ton CV sur-mesure, ta lettre de motivation et ta préparation d&apos;entretien. <strong className="text-[#1a1a1a]">En 60 secondes.</strong>
+          </p>
+          <div className="mt-8">
+            <HeroEmailCapture />
           </div>
-          <span>127+ candidatures analysées cette semaine</span>
-        </div>
+          <p className="mt-4 text-xs text-gray-400">3 candidatures offertes. Sans carte bancaire.</p>
+          <div className="mt-3">
+            <Link href="#demo" className="text-[14px] text-orange-600 font-medium hover:underline transition-all">
+              Ou essaie la démo sans compte ↓
+            </Link>
+          </div>
+        </motion.div>
       </section>
 
-      {/* ━━━ LIVE DEMO ━━━ */}
-      <section id="demo" className="px-6 pb-20 md:pb-28">
-        <p className="text-center text-sm text-gray-500 mb-4">Essaie gratuitement — colle une offre d&apos;emploi</p>
-        <div className="max-w-3xl mx-auto">
+      {/* ━━━ CHAPTER 3: TRY IT NOW ━━━ */}
+      <section id="demo" className="px-6 py-20 md:py-28">
+        <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-10%" }} transition={{ duration: 0.7 }}
+          className="max-w-3xl mx-auto">
+          <div className="text-center mb-8">
+            <p className="text-orange-600 font-bold text-sm tracking-widest uppercase mb-3">Essaie maintenant</p>
+            <h2 className="text-3xl md:text-4xl font-extrabold">Colle une offre. Regarde ce qui se passe.</h2>
+            <div className="flex items-center justify-center gap-2 text-xs text-gray-400 mt-4">
+              <div className="flex -space-x-1.5">
+                {["bg-orange-400", "bg-rose-400", "bg-amber-400", "bg-red-300"].map((c, i) => (
+                  <div key={i} className={`w-5 h-5 rounded-full ${c} border-2 border-[#faf9f6]`} />
+                ))}
+              </div>
+              <span>127+ candidatures analysées cette semaine</span>
+            </div>
+          </div>
           <LiveDemo />
-        </div>
+        </motion.div>
       </section>
 
-      {/* ━━�� HOW IT WORKS — Apple clean ━━━ */}
+      {/* ━━━ CHAPTER 4: HOW IT WORKS ━━━ */}
       <section className="px-6 py-24 md:py-32 bg-[#f5f0eb]">
         <div className="max-w-3xl mx-auto text-center">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
-            <motion.h2 variants={reveal} className="text-4xl md:text-5xl font-semibold tracking-[-0.02em] mb-16">
-              1 offre. 60 secondes.
+            <motion.p variants={reveal} className="text-orange-600 font-bold text-sm tracking-widest uppercase mb-4">Comment ça marche</motion.p>
+            <motion.h2 variants={reveal} className="text-4xl md:text-5xl font-extrabold tracking-[-0.02em] mb-16">
+              1 offre. 60 secondes.<br /><span className="text-orange-500">Tout est fait.</span>
             </motion.h2>
             <div className="grid md:grid-cols-3 gap-8 text-left">
               {[
