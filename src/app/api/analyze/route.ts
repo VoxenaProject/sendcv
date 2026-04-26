@@ -30,7 +30,17 @@ export async function POST(request: Request) {
   if (!textBlock || textBlock.type !== "text") return Response.json({ error: "AI error" }, { status: 500 });
 
   let analysis;
-  try { analysis = JSON.parse(textBlock.text); } catch { return Response.json({ error: "Parse error", raw: textBlock.text }, { status: 500 }); }
+  try {
+    // Nettoyer le texte (parfois l'IA ajoute des backticks markdown)
+    let cleaned = textBlock.text.trim();
+    if (cleaned.startsWith("```json")) cleaned = cleaned.slice(7);
+    if (cleaned.startsWith("```")) cleaned = cleaned.slice(3);
+    if (cleaned.endsWith("```")) cleaned = cleaned.slice(0, -3);
+    analysis = JSON.parse(cleaned.trim());
+  } catch {
+    console.error("Analyze JSON parse error:", textBlock.text.slice(0, 200));
+    return Response.json({ error: "L'analyse a échoué. Réessaie avec une description plus détaillée." }, { status: 500 });
+  }
 
   // Sauvegarder l'application
   const { data: app, error } = await supabase.from("applications").insert({

@@ -35,13 +35,17 @@ export default function ApplyPage() {
     const interval = setInterval(() => setLoadingStep((s) => Math.min(s + 1, ANALYSIS_STEPS.length - 1)), 1500);
 
     const isUrl = jobInput.trim().startsWith("http");
+
+    if (isUrl) {
+      setError("Colle la description de l'offre directement, pas le lien. Copie le texte depuis Indeed/LinkedIn et colle-le ici.");
+      setLoading(false);
+      return;
+    }
+
     const response = await fetch("/api/analyze", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        jobDescription: isUrl ? `Offre d'emploi disponible à: ${jobInput.trim()}` : jobInput.trim(),
-        jobUrl: isUrl ? jobInput.trim() : null,
-      }),
+      body: JSON.stringify({ jobDescription: jobInput.trim(), jobUrl: null }),
     });
 
     clearInterval(interval);

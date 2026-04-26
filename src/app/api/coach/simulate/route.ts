@@ -13,7 +13,16 @@ export async function POST(request: Request) {
   // Check plan — coach is Pro/Lifetime only
   const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single();
   const plan = (profile as unknown as { plan: string })?.plan || "free";
-  if (plan === "free") return new Response("Upgrade required", { status: 402 });
+  if (plan === "free") {
+    // Free users get 1 simulation — check via messages count
+    const freeSimUsed = messages && messages.length > 2;
+    if (freeSimUsed) return new Response("Upgrade required", { status: 402 });
+  }
+
+  // Rate limit : max 20 messages par simulation
+  if (messages && messages.length > 20) {
+    return Response.json({ error: "Simulation terminée. L'entretien dure en moyenne 7-10 échanges." }, { status: 400 });
+  }
 
   const { data: app } = await supabase.from("applications").select("*").eq("id", applicationId).eq("user_id", user.id).single();
   if (!app) return new Response("Not found", { status: 404 });

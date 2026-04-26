@@ -74,16 +74,26 @@ export async function POST(request: Request) {
 
   let structuredCv = null;
   try {
-    structuredCv = JSON.parse(getText(structuredCvRes));
-  } catch {
-    // Fallback: structured CV non parsé, on garde le texte
+    let raw = getText(structuredCvRes).trim();
+    if (raw.startsWith("```json")) raw = raw.slice(7);
+    if (raw.startsWith("```")) raw = raw.slice(3);
+    if (raw.endsWith("```")) raw = raw.slice(0, -3);
+    structuredCv = JSON.parse(raw.trim());
+  } catch (e) {
+    console.error("Structured CV parse error:", e);
   }
 
   let interviewPrep;
   try {
-    interviewPrep = JSON.parse(getText(interviewRes)).questions;
-  } catch {
-    interviewPrep = [{ question: "Erreur de génération", why_they_ask: "", optimal_answer: getText(interviewRes) }];
+    let raw = getText(interviewRes).trim();
+    if (raw.startsWith("```json")) raw = raw.slice(7);
+    if (raw.startsWith("```")) raw = raw.slice(3);
+    if (raw.endsWith("```")) raw = raw.slice(0, -3);
+    const parsed = JSON.parse(raw.trim());
+    interviewPrep = parsed.questions || parsed;
+  } catch (e) {
+    console.error("Interview prep parse error:", e);
+    interviewPrep = [{ question: "L'IA n'a pas pu structurer les questions. Voici les conseils :", why_they_ask: "", optimal_answer: getText(interviewRes) }];
   }
 
   // Update application
