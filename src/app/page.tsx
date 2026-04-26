@@ -68,39 +68,39 @@ const stagger = { visible: { transition: { staggerChildren: 0.1 } } } as const;
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-white text-[#0f172a] overflow-x-hidden">
+    <div className="min-h-screen bg-[#faf9f6] text-[#1a1a1a] overflow-x-hidden">
 
-      {/* ━━━ NAV — Apple clean ━━━ */}
-      <nav role="navigation" aria-label="Navigation principale" className="sticky top-0 z-50 bg-white/80 backdrop-blur-3xl border-b border-black/[0.04]">
-        <div className="max-w-5xl mx-auto px-6 h-12 flex items-center justify-between">
-          <Link href="/" className="text-[15px] font-semibold tracking-tight text-black">
-            sendcv<span className="text-gray-400">.ai</span>
+      {/* ━━━ NAV ━━━ */}
+      <nav role="navigation" aria-label="Navigation principale" className="sticky top-0 z-50 bg-[#faf9f6]/80 backdrop-blur-3xl border-b border-black/[0.04]">
+        <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+          <Link href="/" className="text-[17px] font-bold tracking-tight text-[#1a1a1a]">
+            sendcv<span className="text-orange-400">.ai</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/login" className="hidden sm:block text-xs text-gray-500 hover:text-black transition-colors">Connexion</Link>
-            <Link href="/signup" className="text-xs font-medium bg-[#0071e3] text-white px-4 py-1.5 rounded-full hover:bg-[#0077ED] transition-all">
+            <Link href="/login" className="hidden sm:block text-sm text-gray-500 hover:text-[#1a1a1a] transition-colors">Connexion</Link>
+            <Link href="/signup" className="text-sm font-semibold bg-orange-500 text-white px-5 py-2 rounded-full hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20">
               Commencer
             </Link>
           </div>
         </div>
       </nav>
 
-      {/* ━━━ HERO — Apple minimal ━━━ */}
+      {/* ━━━ HERO ━━━ */}
       <section className="px-6 pt-20 pb-10 md:pt-32 md:pb-16">
         <div className="max-w-3xl mx-auto text-center">
           <motion.div initial="hidden" animate="visible" variants={stagger}>
-            <motion.p variants={reveal} className="text-sm text-gray-500 mb-6">
+            <motion.p variants={reveal} className="text-sm text-orange-600 font-semibold mb-6">
               59% de tes candidatures ne sont jamais vues par un humain.
             </motion.p>
 
-            <motion.h1 variants={reveal} className="text-5xl sm:text-6xl md:text-7xl font-semibold leading-[1.05] tracking-[-0.02em] text-black">
-              Chaque candidature.
+            <motion.h1 variants={reveal} className="text-5xl sm:text-6xl md:text-7xl font-extrabold leading-[1.05] tracking-[-0.02em] text-[#1a1a1a]">
+              Fini les candidatures
               <br />
-              <span className="text-gray-300">Personnalisée par l&apos;IA.</span>
+              <span className="text-orange-500">à l&apos;aveugle.</span>
             </motion.h1>
 
-            <motion.p variants={reveal} className="mt-6 text-lg text-gray-500 max-w-lg mx-auto leading-relaxed">
-              Colle une offre d&apos;emploi. Reçois ton CV sur-mesure, ta lettre de motivation et ta préparation d&apos;entretien. En 60 secondes.
+            <motion.p variants={reveal} className="mt-6 text-lg text-gray-600 max-w-lg mx-auto leading-relaxed">
+              Colle une offre. L&apos;IA crée ton CV sur-mesure, ta lettre et ta prep d&apos;entretien. Personnalisé pour <strong className="text-[#1a1a1a]">chaque poste</strong>. En 60 secondes.
             </motion.p>
 
             <motion.div variants={reveal} className="mt-8">
@@ -108,7 +108,7 @@ export default function Landing() {
             </motion.div>
             <motion.p variants={reveal} className="mt-4 text-xs text-gray-400">3 candidatures offertes. Sans carte bancaire.</motion.p>
             <motion.div variants={reveal} className="mt-3">
-              <Link href="#demo" className="text-[14px] text-[#0071e3] hover:underline transition-all">
+              <Link href="#demo" className="text-[14px] text-orange-600 font-medium hover:underline transition-all">
                 Ou essaie la démo sans compte →
               </Link>
             </motion.div>
@@ -120,7 +120,7 @@ export default function Landing() {
       <section className="px-6 pb-6">
         <div className="flex items-center justify-center gap-2 text-xs text-gray-400">
           <div className="flex -space-x-1.5">
-            {["bg-indigo-400", "bg-violet-400", "bg-emerald-400", "bg-amber-400"].map((c, i) => (
+            {["bg-orange-400", "bg-rose-400", "bg-amber-400", "bg-red-300"].map((c, i) => (
               <div key={i} className={`w-5 h-5 rounded-full ${c} border-2 border-white`} />
             ))}
           </div>
@@ -137,7 +137,7 @@ export default function Landing() {
       </section>
 
       {/* ━━�� HOW IT WORKS — Apple clean ━━━ */}
-      <section className="px-6 py-24 md:py-32 bg-[#f5f5f7]">
+      <section className="px-6 py-24 md:py-32 bg-[#f5f0eb]">
         <div className="max-w-3xl mx-auto text-center">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={stagger}>
             <motion.h2 variants={reveal} className="text-4xl md:text-5xl font-semibold tracking-[-0.02em] mb-16">
@@ -183,7 +183,7 @@ export default function Landing() {
                 { t: "50 templates CV", d: "10 designs × 5 palettes. Du Prestige au Terminal. Export PDF en un clic." },
                 { t: "France & Belgique", d: "Conventions CV locales, niveaux CECR, 13ème mois, ATS européens. Pas un outil US traduit." },
               ].map((f, i) => (
-                <motion.div key={i} variants={reveal} className="group p-7 rounded-2xl bg-[#f5f5f7] hover:bg-[#ececee] transition-colors duration-300">
+                <motion.div key={i} variants={reveal} className="group p-7 rounded-2xl bg-[#f5f0eb] hover:bg-[#efe8e0] transition-colors duration-300">
                   <h3 className="text-lg font-semibold mb-1.5">{f.t}</h3>
                   <p className="text-sm text-gray-500 leading-relaxed">{f.d}</p>
                 </motion.div>
@@ -237,7 +237,7 @@ export default function Landing() {
                 <p className="text-gray-500 font-semibold text-sm">Free</p>
                 <p className="text-4xl font-extrabold mt-2">0€</p>
                 <p className="text-sm text-gray-400 mt-1 mb-6">3 candidatures complètes</p>
-                <ul className="space-y-2 text-sm text-gray-600 mb-6">{["Analyses illimitées", "3 générations", "50 templates", "Double scoring"].map((f) => <li key={f} className="flex items-center gap-2"><span className="text-indigo-400">✓</span>{f}</li>)}</ul>
+                <ul className="space-y-2 text-sm text-gray-600 mb-6">{["Analyses illimitées", "3 générations", "50 templates", "Double scoring"].map((f) => <li key={f} className="flex items-center gap-2"><span className="text-orange-400">✓</span>{f}</li>)}</ul>
                 <Link href="/signup" className="block w-full py-3 rounded-full bg-gray-100 text-gray-700 font-semibold text-sm text-center hover:bg-gray-200 transition-colors">Commencer</Link>
               </div>
 
@@ -246,7 +246,7 @@ export default function Landing() {
                 <p className="text-gray-400 font-semibold text-sm">Pro</p>
                 <p className="text-4xl font-extrabold mt-2">19€<span className="text-lg font-normal text-gray-500">/mois</span></p>
                 <p className="text-sm text-gray-500 mt-1 mb-6">Tout illimité</p>
-                <ul className="space-y-2 text-sm text-gray-300 mb-6">{["Générations illimitées", "Simulations illimitées", "Coach IA complet", "Support prioritaire"].map((f) => <li key={f} className="flex items-center gap-2"><span className="text-indigo-400">✓</span>{f}</li>)}</ul>
+                <ul className="space-y-2 text-sm text-gray-300 mb-6">{["Générations illimitées", "Simulations illimitées", "Coach IA complet", "Support prioritaire"].map((f) => <li key={f} className="flex items-center gap-2"><span className="text-orange-400">✓</span>{f}</li>)}</ul>
                 <Link href="/signup" className="block w-full py-3 rounded-full bg-white text-gray-900 font-bold text-sm text-center hover:bg-gray-100 transition-colors">Passer à Pro</Link>
               </div>
 
@@ -254,7 +254,7 @@ export default function Landing() {
                 <p className="text-gray-500 font-semibold text-sm">Lifetime</p>
                 <p className="text-4xl font-extrabold mt-2">79€</p>
                 <p className="text-sm text-gray-400 mt-1 mb-6">Paiement unique, à vie</p>
-                <ul className="space-y-2 text-sm text-gray-600 mb-6">{["Tout Pro inclus", "Accès à vie", "Futures features", "Zéro abonnement"].map((f) => <li key={f} className="flex items-center gap-2"><span className="text-indigo-400">✓</span>{f}</li>)}</ul>
+                <ul className="space-y-2 text-sm text-gray-600 mb-6">{["Tout Pro inclus", "Accès à vie", "Futures features", "Zéro abonnement"].map((f) => <li key={f} className="flex items-center gap-2"><span className="text-orange-400">✓</span>{f}</li>)}</ul>
                 <Link href="/signup" className="block w-full py-3 rounded-full bg-gray-100 text-gray-700 font-semibold text-sm text-center hover:bg-gray-200 transition-colors">Acheter Lifetime</Link>
               </div>
             </motion.div>
@@ -263,12 +263,12 @@ export default function Landing() {
       </section>
 
       {/* ━━━ GUARANTEE — Full width ━━━ */}
-      <section className="px-6 py-20 bg-gray-900 text-white">
+      <section className="px-6 py-20 bg-[#1a1a1a] text-white">
         <div className="max-w-2xl mx-auto text-center">
-          <p className="text-5xl mb-6">🛡️</p>
+          <div className="w-16 h-16 rounded-2xl bg-orange-500 flex items-center justify-center mx-auto mb-6"><span className="text-2xl">🛡️</span></div>
           <h2 className="text-3xl md:text-4xl font-extrabold mb-4">Garantie Entretien<br />30 Jours.</h2>
-          <p className="text-gray-400 text-lg mb-8">10+ candidatures, zéro entretien ?<br /><strong className="text-white">Remboursement complet.</strong> Sans question.</p>
-          <Link href="/signup" className="inline-flex items-center gap-3 bg-white text-gray-900 px-8 py-4 rounded-full font-bold hover:bg-gray-100 transition-all shadow-xl">
+          <p className="text-gray-400 text-lg mb-8">10+ candidatures, zéro entretien ?<br /><strong className="text-white">On te rembourse. Point.</strong></p>
+          <Link href="/signup" className="inline-flex items-center gap-3 bg-orange-500 text-white px-8 py-4 rounded-full font-bold hover:bg-orange-600 transition-all shadow-xl shadow-orange-500/20">
             Commencer gratuitement
           </Link>
         </div>
@@ -289,11 +289,11 @@ export default function Landing() {
 
       {/* ━━━ FINAL CTA ━━━ */}
       <section className="px-6 py-28 md:py-36 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-indigo-50/30 to-white pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#faf9f6] via-orange-50/30 to-[#faf9f6] pointer-events-none" />
         <div className="relative max-w-2xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-extrabold leading-tight">
             Prêt à décrocher<br />
-            <span className="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">des entretiens ?</span>
+            <span className="text-orange-500">des entretiens ?</span>
           </h2>
           <p className="text-gray-400 mt-6 mb-10 text-lg">3 candidatures gratuites. Pas de carte bancaire.</p>
           <Link href="/signup" className="group inline-flex items-center gap-3 bg-gray-900 text-white pl-8 pr-6 py-4 rounded-full font-semibold text-base hover:bg-gray-800 transition-all shadow-2xl shadow-gray-900/20 hover:-translate-y-0.5">
@@ -308,7 +308,7 @@ export default function Landing() {
       {/* ━━━ FOOTER ━━━ */}
       <footer className="px-6 py-10 border-t border-gray-100">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="text-sm font-black">send<span className="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">cv</span><span className="text-gray-300 text-[10px]">.ai</span></span>
+          <span className="text-sm font-black">send<span className="text-orange-500">cv</span><span className="text-gray-300 text-[10px]">.ai</span></span>
           <div className="flex items-center gap-4 text-[11px] text-gray-400">
             <Link href="/legal" className="hover:text-gray-600 transition-colors">Mentions légales</Link>
             <span>·</span>
@@ -401,7 +401,7 @@ function LiveDemo() {
   const pct = Math.min(100, Math.round((charCount / 50) * 100));
 
   return (
-    <motion.div layout className="rounded-2xl overflow-hidden bg-[#1d1d1f] text-white">
+    <motion.div layout className="rounded-2xl overflow-hidden bg-[#1a1a1a] text-white">
       <AnimatePresence mode="wait">
         {/* ━━━ INPUT ━━━ */}
         {phase === "input" && (
@@ -419,7 +419,7 @@ function LiveDemo() {
             {error && <p className="text-sm text-red-400 mt-3">{error}</p>}
             <button onClick={handleAnalyze} disabled={!isReady}
               className={`mt-4 w-full py-3.5 rounded-xl font-medium text-[14px] transition-all cursor-pointer ${
-                isReady ? "bg-[#0071e3] text-white hover:bg-[#0077ED]" : "bg-white/[0.04] text-gray-600 cursor-not-allowed"
+                isReady ? "bg-orange-500 text-white hover:bg-orange-600" : "bg-white/[0.04] text-gray-600 cursor-not-allowed"
               }`}>
               {isReady ? "Analyser gratuitement" : "Continue à coller l'offre..."}
             </button>
@@ -430,14 +430,14 @@ function LiveDemo() {
         {phase === "analyzing" && (
           <motion.div key="analyzing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-8 sm:p-12 flex flex-col items-center justify-center min-h-[300px]">
             <motion.div animate={{ scale: [1, 1.12, 1], opacity: [0.6, 1, 0.6] }} transition={{ duration: 1.5, repeat: Infinity }}
-              className="w-14 h-14 rounded-2xl bg-[#0071e3] flex items-center justify-center mb-6">
+              className="w-14 h-14 rounded-2xl bg-orange-500 flex items-center justify-center mb-6">
               <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>
             </motion.div>
             <p className="text-[14px] text-white font-medium mb-8">Analyse en cours</p>
             <div className="flex gap-10">
               {["Mots-clés", "ATS", "Recruteur", "Prédiction"].map((label, i) => (
                 <motion.div key={i} animate={{ opacity: analyzeStep >= i ? 1 : 0.15 }} transition={{ duration: 0.4 }} className="text-center">
-                  <div className={`w-2 h-2 rounded-full mx-auto mb-2 transition-colors duration-300 ${analyzeStep >= i ? "bg-[#0071e3]" : "bg-gray-700"}`} />
+                  <div className={`w-2 h-2 rounded-full mx-auto mb-2 transition-colors duration-300 ${analyzeStep >= i ? "bg-orange-500" : "bg-gray-700"}`} />
                   <p className="text-[10px] text-gray-500">{label}</p>
                 </motion.div>
               ))}
@@ -464,7 +464,7 @@ function LiveDemo() {
                 className="flex-1 px-4 py-3 rounded-xl bg-white/[0.06] border border-white/[0.1] text-[14px] text-white placeholder-gray-600 focus:outline-none focus:border-white/25 transition-all" />
               <button onClick={handleEmailSubmit} disabled={!demoEmail.includes("@")}
                 className={`px-5 py-3 rounded-xl font-medium text-[14px] transition-all cursor-pointer shrink-0 ${
-                  demoEmail.includes("@") ? "bg-[#0071e3] text-white hover:bg-[#0077ED]" : "bg-white/[0.04] text-gray-600 cursor-not-allowed"
+                  demoEmail.includes("@") ? "bg-orange-500 text-white hover:bg-orange-600" : "bg-white/[0.04] text-gray-600 cursor-not-allowed"
                 }`}>
                 Voir les résultats
               </button>
@@ -519,7 +519,7 @@ function LiveDemo() {
                 {result.keywords.slice(0, keywordIndex).map((kw, i) => (
                   <motion.span key={i} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
                     className={`px-2.5 py-1 rounded-md text-[11px] font-medium ${
-                      kw.importance === "critical" ? "bg-[#0071e3]/15 text-[#5fa8ff]" :
+                      kw.importance === "critical" ? "bg-orange-500/15 text-[#5fa8ff]" :
                       kw.importance === "important" ? "bg-purple-500/10 text-purple-400" :
                       "bg-white/[0.04] text-gray-500"
                     }`}>
@@ -533,7 +533,7 @@ function LiveDemo() {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}
               className="p-4 rounded-xl bg-white/[0.03] border border-white/[0.06] mb-5">
               <p className="text-[12px] text-gray-300 leading-relaxed">
-                {insightTyped.displayed}<span className={`${insightTyped.done ? "hidden" : ""} text-[#0071e3] animate-pulse`}>|</span>
+                {insightTyped.displayed}<span className={`${insightTyped.done ? "hidden" : ""} text-orange-600 animate-pulse`}>|</span>
               </p>
             </motion.div>
 
@@ -551,7 +551,7 @@ function LiveDemo() {
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-2.5">
-              <Link href={`/signup?email=${encodeURIComponent(demoEmail)}`} className="flex-1 text-center py-3.5 rounded-xl bg-[#0071e3] text-white font-medium text-[14px] hover:bg-[#0077ED] transition-all">
+              <Link href={`/signup?email=${encodeURIComponent(demoEmail)}`} className="flex-1 text-center py-3.5 rounded-xl bg-orange-500 text-white font-medium text-[14px] hover:bg-orange-600 transition-all">
                 Créer mon compte et recevoir le CV
               </Link>
               <button onClick={() => { setResult(null); setInput(""); setPhase("input"); }}
@@ -584,7 +584,7 @@ function HeroEmailCapture() {
         placeholder="Ton email"
         className="w-full sm:flex-1 px-5 py-3.5 rounded-full border border-gray-200 text-[15px] text-center sm:text-left focus:outline-none focus:border-gray-400 transition-all" />
       <button type="submit"
-        className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-[#0071e3] text-white font-medium text-[15px] hover:bg-[#0077ED] transition-all shrink-0 cursor-pointer">
+        className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-orange-500 text-white font-medium text-[15px] hover:bg-orange-600 transition-all shrink-0 cursor-pointer">
         Commencer
       </button>
     </form>
