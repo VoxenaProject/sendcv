@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Accueil", icon: HomeIcon, mobileOnly: false },
+  { href: "/jobs", label: "Offres", icon: SearchIcon, mobileOnly: false },
   { href: "/apply", label: "Candidater", icon: PlusIcon, mobileOnly: false },
-  { href: "/templates", label: "Templates", icon: LayoutIcon, mobileOnly: false },
   { href: "/pricing", label: "Crédits", icon: CreditIcon, mobileOnly: true },
   { href: "/settings", label: "Profil", icon: UserIcon, mobileOnly: true },
 ];
@@ -93,7 +93,15 @@ export function MobileNav({ plan }: { plan: "free" | "pro" | "lifetime" }) {
   );
 }
 
-// ━━━ Icons (inline SVG, pas de dépendance) ━━━
+// ━━━ Icons ━━━
+function SearchIcon({ size, active }: { size: number; active: boolean }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={active ? "#4338ca" : "#9ca3af"} strokeWidth={active ? 2.2 : 1.8} strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+  );
+}
+
 function HomeIcon({ size, active }: { size: number; active: boolean }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={active ? "#4338ca" : "#9ca3af"} strokeWidth={active ? 2.2 : 1.8} strokeLinecap="round" strokeLinejoin="round">

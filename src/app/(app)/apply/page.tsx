@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 
 const TIPS = [
@@ -23,6 +23,15 @@ export default function ApplyPage() {
   const [loadingStep, setLoadingStep] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Pre-fill from jobs page
+  useEffect(() => {
+    if (searchParams.get("from") === "jobs") {
+      const desc = sessionStorage.getItem("sendcv_job_description");
+      if (desc) { setJobInput(desc); sessionStorage.removeItem("sendcv_job_description"); }
+    }
+  }, [searchParams]);
 
   async function handleAnalyze(e: React.FormEvent) {
     e.preventDefault();
