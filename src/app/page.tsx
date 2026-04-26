@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 
 // ━━━ Animated score circle ━━━
@@ -312,6 +312,8 @@ export default function Landing() {
 function LiveDemo() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [phase, setPhase] = useState<"input" | "analyzing" | "result">("input");
+  const [analyzeStep, setAnalyzeStep] = useState(0);
   const [result, setResult] = useState<{
     title: string; company: string; salary_estimate: string;
     keywords: { word: string; importance: string }[];
@@ -321,20 +323,22 @@ function LiveDemo() {
   const [error, setError] = useState<string | null>(null);
   const [keywordIndex, setKeywordIndex] = useState(0);
 
-  // Animate keywords appearing one by one
   useEffect(() => {
-    if (!result) return;
+    if (!result || phase !== "result") return;
     if (keywordIndex >= result.keywords.length) return;
-    const t = setTimeout(() => setKeywordIndex((i) => i + 1), 200);
+    const t = setTimeout(() => setKeywordIndex((i) => i + 1), 150);
     return () => clearTimeout(t);
-  }, [result, keywordIndex]);
+  }, [result, keywordIndex, phase]);
 
   async function handleAnalyze() {
     if (!input.trim() || input.trim().length < 50) return;
-    setLoading(true);
+    setPhase("analyzing");
     setError(null);
     setResult(null);
     setKeywordIndex(0);
+    setAnalyzeStep(0);
+
+    const stepInterval = setInterval(() => setAnalyzeStep((s) => Math.min(s + 1, 3)), 1200);
 
     const res = await fetch("/api/demo-analyze", {
       method: "POST",
@@ -342,72 +346,112 @@ function LiveDemo() {
       body: JSON.stringify({ jobDescription: input }),
     });
     const data = await res.json();
+    clearInterval(stepInterval);
 
-    if (!res.ok) { setError(data.error); setLoading(false); return; }
+    if (!res.ok) { setError(data.error); setPhase("input"); return; }
     setResult(data);
-    setLoading(false);
+    setPhase("result");
   }
 
+  const charCount = input.trim().length;
+  const isReady = charCount >= 50;
+  const pct = Math.min(100, Math.round((charCount / 50) * 100));
+
   return (
-    <div className="rounded-3xl bg-white/80 backdrop-blur-xl border border-gray-200/60 p-2 shadow-[0_8px_60px_-12px_rgba(0,0,0,0.12)]">
-      <div className="rounded-2xl bg-[#fafbfc] p-6 sm:p-8">
-        {!result ? (
-          /* ━━━ Input state ━━━ */
-          <div className="space-y-4">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="flex gap-1.5"><div className="w-3 h-3 rounded-full bg-gray-200" /><div className="w-3 h-3 rounded-full bg-gray-200" /><div className="w-3 h-3 rounded-full bg-gray-200" /></div>
-              <p className="text-xs text-gray-400 font-medium">Essaie maintenant — colle une offre d&apos;emploi</p>
-            </div>
+    <motion.div layout className="rounded-2xl overflow-hidden bg-black text-white">
+      <AnimatePresence mode="wait">
+        {phase === "input" && (
+          <motion.div key="input" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 sm:p-8">
+            <p className="text-sm text-gray-400 mb-4">Essaie maintenant — sans compte, sans carte.</p>
             <textarea
-              value={input} onChange={(e) => setInput(e.target.value)} rows={5}
-              placeholder={"Colle ici une description d'offre d'emploi.\nEx: \"Nous recherchons un Développeur Full-Stack Senior pour rejoindre notre équipe à Bruxelles...\""}
-              className="w-full px-4 py-3 rounded-2xl border border-gray-200 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all resize-none bg-white"
+              value={input} onChange={(e) => setInput(e.target.value)} rows={4}
+              placeholder={"Colle une offre d'emploi ici.\nL'IA l'analyse instantanément."}
+              className="w-full px-4 py-3 rounded-xl bg-white/[0.06] border border-white/[0.08] text-sm text-white placeholder-gray-600 leading-relaxed focus:outline-none focus:border-white/20 transition-all resize-none"
             />
-            {error && <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-xl">{error}</p>}
-            <button onClick={handleAnalyze} disabled={loading || input.trim().length < 50}
-              className={`w-full py-3.5 rounded-2xl font-bold text-sm transition-all cursor-pointer ${
-                input.trim().length >= 50
-                  ? "bg-gray-900 text-white hover:bg-gray-800 shadow-xl shadow-gray-900/15"
-                  : "bg-gray-100 text-gray-400 cursor-not-allowed"
-              }`}>
-              {loading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
-                  Analyse en cours...
-                </span>
-              ) : input.trim().length >= 50 ? "Analyser cette offre — gratuit, sans compte" : `${50 - input.trim().length} caractères de plus...`}
-            </button>
-          </div>
-        ) : (
-          /* ━━━ Result state — animated ━━━ */
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-bold text-lg">{result.title}</p>
-                <p className="text-sm text-gray-500">{result.company} — {result.salary_estimate}</p>
+            {/* Progress bar */}
+            <div className="mt-3 flex items-center gap-3">
+              <div className="flex-1 h-1 bg-white/[0.06] rounded-full overflow-hidden">
+                <motion.div className="h-full rounded-full" animate={{ width: `${pct}%`, backgroundColor: isReady ? "#34d399" : "#6366f1" }} transition={{ duration: 0.3 }} />
               </div>
-              <button onClick={() => { setResult(null); setInput(""); }} className="text-xs text-gray-400 hover:text-gray-600 cursor-pointer">
-                Nouvelle analyse
-              </button>
+              <span className={`text-xs font-mono ${isReady ? "text-emerald-400" : "text-gray-600"}`}>{charCount}/50</span>
             </div>
 
-            {/* Animated scores */}
-            <div className="flex justify-center gap-10 sm:gap-16">
-              <ScoreRing value={result.ats_score} label="Score ATS" color="#4338ca" delay={0} />
-              <ScoreRing value={result.recruiter_score} label="Score Recruteur" color="#7c3aed" delay={300} />
-              <ScoreRing value={result.interview_probability} label="Prob. entretien" color="#059669" delay={600} />
+            {error && <p className="text-sm text-red-400 mt-3">{error}</p>}
+
+            <button onClick={handleAnalyze} disabled={!isReady}
+              className={`mt-4 w-full py-3.5 rounded-xl font-medium text-sm transition-all cursor-pointer ${
+                isReady ? "bg-[#0071e3] text-white hover:bg-[#0077ED]" : "bg-white/[0.04] text-gray-600 cursor-not-allowed"
+              }`}>
+              {isReady ? "Analyser gratuitement" : "Continue à coller l'offre..."}
+            </button>
+          </motion.div>
+        )}
+
+        {phase === "analyzing" && (
+          <motion.div key="analyzing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-8 sm:p-12 flex flex-col items-center justify-center min-h-[280px]">
+            {/* Pulsing ring */}
+            <motion.div animate={{ scale: [1, 1.15, 1], opacity: [0.5, 1, 0.5] }} transition={{ duration: 1.5, repeat: Infinity }}
+              className="w-16 h-16 rounded-2xl bg-[#0071e3] flex items-center justify-center mb-6">
+              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>
+            </motion.div>
+            <p className="text-sm text-white font-medium mb-6">Analyse en cours</p>
+            <div className="flex gap-8">
+              {["Mots-clés", "Score ATS", "Score Recruteur", "Probabilité"].map((label, i) => (
+                <motion.div key={i} initial={{ opacity: 0.2 }} animate={{ opacity: analyzeStep >= i ? 1 : 0.2 }} className="text-center">
+                  <div className={`w-2 h-2 rounded-full mx-auto mb-1.5 ${analyzeStep >= i ? "bg-[#0071e3]" : "bg-gray-700"}`} />
+                  <p className="text-[10px] text-gray-500">{label}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {phase === "result" && result && (
+          <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 sm:p-8">
+            {/* Header */}
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <motion.p initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="text-lg font-semibold">{result.title}</motion.p>
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="text-sm text-gray-400">{result.company}</motion.p>
+              </div>
+              <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 }}
+                className="text-right shrink-0 px-3 py-1.5 rounded-lg bg-white/[0.06]">
+                <p className="text-[10px] text-gray-500">Salaire estimé</p>
+                <p className="text-sm font-semibold text-emerald-400">{result.salary_estimate}</p>
+              </motion.div>
             </div>
 
-            {/* Keywords appearing one by one */}
-            <div>
-              <p className="text-xs text-gray-400 font-medium mb-2">Mots-clés détectés</p>
-              <div className="flex flex-wrap gap-2 min-h-[40px]">
+            {/* Scores — horizontal bars instead of circles */}
+            <div className="space-y-3 mb-6">
+              {[
+                { label: "Score ATS", value: result.ats_score, color: "#0071e3", delay: 0.1 },
+                { label: "Score Recruteur", value: result.recruiter_score, color: "#a855f7", delay: 0.3 },
+                { label: "Probabilité d'entretien", value: result.interview_probability, color: "#34d399", delay: 0.5 },
+              ].map((s) => (
+                <motion.div key={s.label} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: s.delay }}>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs text-gray-400">{s.label}</span>
+                    <span className="text-xs font-mono font-semibold" style={{ color: s.color }}>{s.value}%</span>
+                  </div>
+                  <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+                    <motion.div className="h-full rounded-full" initial={{ width: 0 }} animate={{ width: `${s.value}%` }}
+                      transition={{ delay: s.delay + 0.2, duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                      style={{ backgroundColor: s.color }} />
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Keywords */}
+            <div className="mb-6">
+              <p className="text-xs text-gray-500 mb-2">Mots-clés détectés</p>
+              <div className="flex flex-wrap gap-1.5 min-h-[32px]">
                 {result.keywords.slice(0, keywordIndex).map((kw, i) => (
-                  <motion.span key={i} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium ${
-                      kw.importance === "critical" ? "bg-indigo-50 text-indigo-700 border border-indigo-100" :
-                      kw.importance === "important" ? "bg-violet-50 text-violet-700 border border-violet-100" :
-                      "bg-gray-50 text-gray-600 border border-gray-200"
+                  <motion.span key={i} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
+                    className={`px-2.5 py-1 rounded-md text-xs font-medium ${
+                      kw.importance === "critical" ? "bg-[#0071e3]/10 text-[#4d9fff]" :
+                      kw.importance === "important" ? "bg-purple-500/10 text-purple-400" :
+                      "bg-white/[0.04] text-gray-500"
                     }`}>
                     {kw.word}
                   </motion.span>
@@ -416,25 +460,26 @@ function LiveDemo() {
             </div>
 
             {/* Insight */}
-            <div className="p-4 rounded-2xl bg-indigo-50 border border-indigo-100">
-              <p className="text-xs font-bold text-indigo-700 mb-1">💡 Conseil</p>
-              <p className="text-sm text-indigo-800">{result.top_insight}</p>
-            </div>
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}
+              className="p-4 rounded-xl bg-white/[0.04] border border-white/[0.06] mb-6">
+              <p className="text-sm text-gray-300">{result.top_insight}</p>
+            </motion.div>
 
             {/* CTA */}
-            <div className="text-center pt-2">
-              <Link href="/signup" className="group inline-flex items-center gap-3 bg-gray-900 text-white pl-8 pr-6 py-4 rounded-full font-semibold text-base hover:bg-gray-800 transition-all shadow-2xl shadow-gray-900/20 hover:-translate-y-0.5">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link href="/signup" className="flex-1 text-center py-3 rounded-xl bg-[#0071e3] text-white font-medium text-sm hover:bg-[#0077ED] transition-all">
                 Recevoir le CV + lettre + entretien
-                <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
-                </div>
               </Link>
-              <p className="text-xs text-gray-400 mt-3">3 candidatures complètes gratuites</p>
+              <button onClick={() => { setResult(null); setInput(""); setPhase("input"); }}
+                className="py-3 px-5 rounded-xl bg-white/[0.06] text-gray-400 text-sm hover:bg-white/[0.1] transition-all cursor-pointer">
+                Nouvelle analyse
+              </button>
             </div>
-          </div>
+            <p className="text-xs text-gray-600 text-center mt-3">3 candidatures complètes gratuites</p>
+          </motion.div>
         )}
-      </div>
-    </div>
+      </AnimatePresence>
+    </motion.div>
   );
 }
 
