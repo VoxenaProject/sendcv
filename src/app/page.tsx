@@ -128,38 +128,11 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ━━━ PRODUCT — Floating glass card ━━━ */}
+      {/* ━━━ LIVE DEMO — The WOW moment ━━━ */}
       <section className="px-6 pb-24 -mt-8">
-        <Parallax offset={20}>
-          <div className="max-w-4xl mx-auto">
-            <div className="rounded-3xl bg-white/80 backdrop-blur-xl border border-gray-200/60 p-2 shadow-[0_8px_60px_-12px_rgba(0,0,0,0.12)]">
-              <div className="rounded-2xl bg-[#fafbfc] p-6 sm:p-8">
-                {/* Header */}
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="flex gap-1.5"><div className="w-3 h-3 rounded-full bg-gray-200" /><div className="w-3 h-3 rounded-full bg-gray-200" /><div className="w-3 h-3 rounded-full bg-gray-200" /></div>
-                  <div className="h-8 flex-1 rounded-lg bg-white border border-gray-200 flex items-center px-3"><span className="text-[11px] text-gray-400">Développeur Full-Stack — TechCorp Brussels</span></div>
-                </div>
-
-                {/* Scores */}
-                <div className="flex justify-center gap-12 sm:gap-20">
-                  <ScoreRing value={82} label="Score ATS" color="#4338ca" delay={200} />
-                  <ScoreRing value={74} label="Score Recruteur" color="#7c3aed" delay={500} />
-                  <ScoreRing value={78} label="Probabilité entretien" color="#059669" delay={800} />
-                </div>
-
-                {/* Keywords */}
-                <div className="mt-8 flex flex-wrap justify-center gap-2">
-                  {["React", "TypeScript", "Node.js", "Agile", "CI/CD"].map((k) => (
-                    <span key={k} className="px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">✓ {k}</span>
-                  ))}
-                  {["PostgreSQL", "AWS"].map((k) => (
-                    <span key={k} className="px-3 py-1.5 rounded-full text-xs font-medium bg-red-50 text-red-600 border border-red-100">✕ {k}</span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </Parallax>
+        <div className="max-w-4xl mx-auto">
+          <LiveDemo />
+        </div>
       </section>
 
       {/* ━━━ HOW IT WORKS — Numbered ━━━ */}
@@ -374,6 +347,136 @@ export default function Landing() {
           </div>
         </div>
       </footer>
+    </div>
+  );
+}
+
+// ━━━ LIVE DEMO COMPONENT ━━━
+function LiveDemo() {
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<{
+    title: string; company: string; salary_estimate: string;
+    keywords: { word: string; importance: string }[];
+    ats_score: number; recruiter_score: number; interview_probability: number;
+    top_insight: string;
+  } | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [keywordIndex, setKeywordIndex] = useState(0);
+
+  // Animate keywords appearing one by one
+  useEffect(() => {
+    if (!result) return;
+    if (keywordIndex >= result.keywords.length) return;
+    const t = setTimeout(() => setKeywordIndex((i) => i + 1), 200);
+    return () => clearTimeout(t);
+  }, [result, keywordIndex]);
+
+  async function handleAnalyze() {
+    if (!input.trim() || input.trim().length < 50) return;
+    setLoading(true);
+    setError(null);
+    setResult(null);
+    setKeywordIndex(0);
+
+    const res = await fetch("/api/demo-analyze", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ jobDescription: input }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) { setError(data.error); setLoading(false); return; }
+    setResult(data);
+    setLoading(false);
+  }
+
+  return (
+    <div className="rounded-3xl bg-white/80 backdrop-blur-xl border border-gray-200/60 p-2 shadow-[0_8px_60px_-12px_rgba(0,0,0,0.12)]">
+      <div className="rounded-2xl bg-[#fafbfc] p-6 sm:p-8">
+        {!result ? (
+          /* ━━━ Input state ━━━ */
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="flex gap-1.5"><div className="w-3 h-3 rounded-full bg-gray-200" /><div className="w-3 h-3 rounded-full bg-gray-200" /><div className="w-3 h-3 rounded-full bg-gray-200" /></div>
+              <p className="text-xs text-gray-400 font-medium">Essaie maintenant — colle une offre d&apos;emploi</p>
+            </div>
+            <textarea
+              value={input} onChange={(e) => setInput(e.target.value)} rows={5}
+              placeholder={"Colle ici une description d'offre d'emploi.\nEx: \"Nous recherchons un Développeur Full-Stack Senior pour rejoindre notre équipe à Bruxelles...\""}
+              className="w-full px-4 py-3 rounded-2xl border border-gray-200 text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all resize-none bg-white"
+            />
+            {error && <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-xl">{error}</p>}
+            <button onClick={handleAnalyze} disabled={loading || input.trim().length < 50}
+              className={`w-full py-3.5 rounded-2xl font-bold text-sm transition-all cursor-pointer ${
+                input.trim().length >= 50
+                  ? "bg-gray-900 text-white hover:bg-gray-800 shadow-xl shadow-gray-900/15"
+                  : "bg-gray-100 text-gray-400 cursor-not-allowed"
+              }`}>
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
+                  Analyse en cours...
+                </span>
+              ) : input.trim().length >= 50 ? "Analyser cette offre — gratuit, sans compte" : `${50 - input.trim().length} caractères de plus...`}
+            </button>
+          </div>
+        ) : (
+          /* ━━━ Result state — animated ━━━ */
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-bold text-lg">{result.title}</p>
+                <p className="text-sm text-gray-500">{result.company} — {result.salary_estimate}</p>
+              </div>
+              <button onClick={() => { setResult(null); setInput(""); }} className="text-xs text-gray-400 hover:text-gray-600 cursor-pointer">
+                Nouvelle analyse
+              </button>
+            </div>
+
+            {/* Animated scores */}
+            <div className="flex justify-center gap-10 sm:gap-16">
+              <ScoreRing value={result.ats_score} label="Score ATS" color="#4338ca" delay={0} />
+              <ScoreRing value={result.recruiter_score} label="Score Recruteur" color="#7c3aed" delay={300} />
+              <ScoreRing value={result.interview_probability} label="Prob. entretien" color="#059669" delay={600} />
+            </div>
+
+            {/* Keywords appearing one by one */}
+            <div>
+              <p className="text-xs text-gray-400 font-medium mb-2">Mots-clés détectés</p>
+              <div className="flex flex-wrap gap-2 min-h-[40px]">
+                {result.keywords.slice(0, keywordIndex).map((kw, i) => (
+                  <motion.span key={i} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium ${
+                      kw.importance === "critical" ? "bg-indigo-50 text-indigo-700 border border-indigo-100" :
+                      kw.importance === "important" ? "bg-violet-50 text-violet-700 border border-violet-100" :
+                      "bg-gray-50 text-gray-600 border border-gray-200"
+                    }`}>
+                    {kw.word}
+                  </motion.span>
+                ))}
+              </div>
+            </div>
+
+            {/* Insight */}
+            <div className="p-4 rounded-2xl bg-indigo-50 border border-indigo-100">
+              <p className="text-xs font-bold text-indigo-700 mb-1">💡 Conseil</p>
+              <p className="text-sm text-indigo-800">{result.top_insight}</p>
+            </div>
+
+            {/* CTA */}
+            <div className="text-center pt-2">
+              <Link href="/signup" className="group inline-flex items-center gap-3 bg-gray-900 text-white pl-8 pr-6 py-4 rounded-full font-semibold text-base hover:bg-gray-800 transition-all shadow-2xl shadow-gray-900/20 hover:-translate-y-0.5">
+                Recevoir le CV + lettre + entretien
+                <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+                </div>
+              </Link>
+              <p className="text-xs text-gray-400 mt-3">3 candidatures complètes gratuites</p>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
