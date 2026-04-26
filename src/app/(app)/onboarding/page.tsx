@@ -103,8 +103,28 @@ export default function OnboardingPage() {
   const progress = ((step + 1) / STEPS.length) * 100;
   const s = STEPS[step];
 
+  // Build live CV data for preview
+  const liveCV = {
+    full_name: "Ton nom",
+    headline: headline || "Ton titre professionnel",
+    location: location || "",
+    email: "",
+    summary: headline ? `${headline}${experiences.length > 0 ? ` avec ${experiences.length} expérience${experiences.length > 1 ? "s" : ""}` : ""}${skills.length > 0 ? `. Compétences : ${skills.slice(0, 3).join(", ")}` : ""}.` : "",
+    experiences: experiences.filter((e) => e.title).map((e) => ({
+      title: e.title, company: e.company, location: "", dates: e.dates,
+      bullets: e.description ? e.description.split("\n").filter(Boolean) : ["..."],
+    })),
+    education: educations.filter((e) => e.degree).map((e) => ({ degree: e.degree, school: e.school, dates: e.dates })),
+    skills,
+    languages: languages.map((l) => ({ language: l.language, level: l.level })),
+  };
+
+  const hasData = headline || experiences.length > 0 || skills.length > 0;
+
   return (
-    <div className="max-w-xl mx-auto py-4">
+    <div className="flex gap-8 max-w-6xl mx-auto py-4">
+    {/* Left: Form */}
+    <div className="flex-1 max-w-xl">
       {/* Progress */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-2">
@@ -322,6 +342,72 @@ export default function OnboardingPage() {
       {step > 0 && step < STEPS.length - 1 && (
         <p className="text-center mt-4"><button onClick={next} className="text-xs text-gray-400 hover:text-gray-600 cursor-pointer">Passer</button></p>
       )}
+    </div>
+
+    {/* Right: Live CV Preview (desktop only, from step 1+) */}
+    {step > 0 && hasData && (
+      <div className="hidden lg:block w-[340px] shrink-0 sticky top-24 self-start">
+        <div className="rounded-2xl border border-gray-200 bg-white shadow-xl overflow-hidden" style={{ maxHeight: "calc(100vh - 120px)", overflowY: "auto" }}>
+          <div className="p-1">
+            <div style={{ transform: "scale(0.48)", transformOrigin: "top left", width: "210mm", minHeight: "200mm", fontFamily: "'Segoe UI', system-ui, sans-serif", fontSize: "9.5pt", lineHeight: "1.4", color: "#1e293b", background: "#fff" }}>
+              {/* Mini CV preview */}
+              <div style={{ padding: "20px 24px" }}>
+                <div style={{ marginBottom: "14px" }}>
+                  <div style={{ width: "30px", height: "3px", background: "#4338ca", borderRadius: "2px", marginBottom: "8px" }} />
+                  <h1 style={{ fontSize: "20pt", fontWeight: 800, margin: 0 }}>{liveCV.full_name}</h1>
+                  <p style={{ fontSize: "10pt", color: "#4338ca", fontWeight: 600, margin: "3px 0 0" }}>{liveCV.headline}</p>
+                  {liveCV.location && <p style={{ fontSize: "8pt", color: "#94a3b8", margin: "4px 0 0" }}>{liveCV.location}</p>}
+                </div>
+
+                {liveCV.summary && (
+                  <div style={{ marginBottom: "14px", padding: "8px 10px", background: "#eef2ff", borderRadius: "4px", borderLeft: "3px solid #4338ca" }}>
+                    <p style={{ fontSize: "8pt", color: "#475569", margin: 0 }}>{liveCV.summary}</p>
+                  </div>
+                )}
+
+                {liveCV.experiences.length > 0 && (
+                  <div style={{ marginBottom: "12px" }}>
+                    <h2 style={{ fontSize: "7pt", fontWeight: 700, textTransform: "uppercase", letterSpacing: "2px", color: "#4338ca", marginBottom: "8px" }}>Expérience</h2>
+                    {liveCV.experiences.map((exp, i) => (
+                      <div key={i} style={{ marginBottom: "10px", paddingLeft: "10px", borderLeft: "2px solid #e2e8f0" }}>
+                        <p style={{ fontSize: "9pt", fontWeight: 700, margin: 0 }}>{exp.title}</p>
+                        <p style={{ fontSize: "8pt", color: "#4338ca", margin: "1px 0 3px" }}>{exp.company} {exp.dates && `· ${exp.dates}`}</p>
+                        {exp.bullets.map((b, j) => <p key={j} style={{ fontSize: "8pt", color: "#64748b", margin: "0 0 1px" }}>• {b}</p>)}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {liveCV.education.length > 0 && (
+                  <div style={{ marginBottom: "12px" }}>
+                    <h2 style={{ fontSize: "7pt", fontWeight: 700, textTransform: "uppercase", letterSpacing: "2px", color: "#4338ca", marginBottom: "6px" }}>Formation</h2>
+                    {liveCV.education.map((edu, i) => <p key={i} style={{ fontSize: "8pt", margin: "0 0 3px" }}><strong>{edu.degree}</strong> — {edu.school} {edu.dates && `(${edu.dates})`}</p>)}
+                  </div>
+                )}
+
+                {liveCV.skills.length > 0 && (
+                  <div style={{ marginBottom: "12px" }}>
+                    <h2 style={{ fontSize: "7pt", fontWeight: 700, textTransform: "uppercase", letterSpacing: "2px", color: "#4338ca", marginBottom: "6px" }}>Compétences</h2>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "3px" }}>
+                      {liveCV.skills.map((s, i) => <span key={i} style={{ fontSize: "7pt", padding: "2px 6px", background: "#eef2ff", color: "#312e81", borderRadius: "3px" }}>{s}</span>)}
+                    </div>
+                  </div>
+                )}
+
+                {liveCV.languages.length > 0 && (
+                  <div>
+                    <h2 style={{ fontSize: "7pt", fontWeight: 700, textTransform: "uppercase", letterSpacing: "2px", color: "#4338ca", marginBottom: "6px" }}>Langues</h2>
+                    {liveCV.languages.map((l, i) => <p key={i} style={{ fontSize: "8pt", margin: "0 0 2px" }}>{l.language} — <span style={{ color: "#94a3b8" }}>{l.level}</span></p>)}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+        <p className="text-[10px] text-gray-400 text-center mt-2">Preview live · Se met à jour en temps réel</p>
+      </div>
+    )}
+
     </div>
   );
 }
