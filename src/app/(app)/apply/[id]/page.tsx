@@ -218,23 +218,26 @@ export default async function ApplicationDetailPage(props: { params: Promise<{ i
             <p className="text-sm font-medium text-indigo-600">{plan === "pro" ? "Pro — Illimité" : "Lifetime — Illimité"}</p>
           )}
 
-          {!hasProfile && (
-            <div className="bg-amber-50 border border-amber-200 p-4 rounded-xl text-sm max-w-md mx-auto">
-              <p className="font-bold text-amber-700">Complète ton profil d&apos;abord</p>
-              <p className="text-gray-500 text-xs mt-1">L&apos;IA a besoin de ton expérience pour générer un CV personnalisé.</p>
-              <Link href="/settings" className="inline-block mt-2 bg-amber-500 text-white px-4 py-2 rounded-lg text-xs font-bold">
+          {/* Priorité 1 : paywall si plus de crédits */}
+          {!canGenerate ? (
+            <div className="space-y-3">
+              <p className="text-sm text-gray-500">Tes 3 générations gratuites sont utilisées.</p>
+              <Link href="/pricing" className="inline-block bg-indigo-600 text-white px-8 py-3.5 rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20">
+                Passer à Pro — 19€/mois
+              </Link>
+            </div>
+          ) : !hasProfile ? (
+            /* Priorité 2 : profil incomplet */
+            <div className="space-y-3">
+              <p className="text-sm text-gray-500">Ajoute ton expérience pour un CV personnalisé.</p>
+              <Link href="/settings" className="inline-block bg-black text-white px-8 py-3.5 rounded-xl font-bold hover:bg-gray-800 transition-all">
                 Compléter mon profil
               </Link>
             </div>
-          )}
-
-          {!canGenerate ? (
-            <Link href="/pricing" className="inline-block bg-indigo-600 text-white px-8 py-3.5 rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20">
-              Passer à Pro pour continuer
-            </Link>
-          ) : hasProfile ? (
+          ) : (
+            /* Tout est OK → bouton générer */
             <GenerateButton applicationId={app.id} />
-          ) : null}
+          )}
         </div>
       )}
 

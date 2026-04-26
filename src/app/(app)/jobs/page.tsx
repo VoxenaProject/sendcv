@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Job {
@@ -17,27 +17,41 @@ interface Job {
 }
 
 export default function JobsPage() {
-  const [query, setQuery] = useState("");
-  const [location, setLocation] = useState("Bruxelles, Belgique");
+  const searchParams = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get("q") || "");
+  const [location, setLocation] = useState(searchParams.get("location") || "Bruxelles, Belgique");
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const router = useRouter();
 
-  async function handleSearch(e: React.FormEvent) {
-    e.preventDefault();
-    if (!query.trim()) return;
+  // Auto-search si params dans l'URL
+  useEffect(() => {
+    if (searchParams.get("q")) {
+      doSearch(searchParams.get("q")!, searchParams.get("location") || "Bruxelles, Belgique");
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  async function doSearch(q: string, loc: string) {
     setLoading(true);
     setSearched(true);
     setSelectedJob(null);
 
-    const res = await fetch(`/api/jobs/search?q=${encodeURIComponent(query)}&location=${encodeURIComponent(location)}`);
+    const res = await fetch(`/api/jobs/search?q=${encodeURIComponent(q)}&location=${encodeURIComponent(loc)}`);
     const data = await res.json();
 
     if (res.ok) setJobs(data.jobs || []);
     else setJobs([]);
     setLoading(false);
+  }
+
+  async function handleSearch(e: React.FormEvent) {
+    e.preventDefault();
+    if (!query.trim()) return;
+    // Persist dans l'URL pour le back button
+    window.history.replaceState(null, "", `/jobs?q=${encodeURIComponent(query)}&location=${encodeURIComponent(location)}`);
+    doSearch(query, location);
   }
 
   function handleAnalyze(job: Job) {

@@ -96,11 +96,13 @@ export default function SimulatePage() {
             <h2 className="text-xl font-extrabold">Prêt pour ton entretien ?</h2>
             <p className="text-sm text-gray-400 mt-2 max-w-sm">Le coach IA va jouer le rôle du recruteur pour ce poste. Réponds comme si c&apos;était un vrai entretien. Tu recevras un feedback après chaque réponse.</p>
           </div>
+          <div className="px-4 py-2.5 rounded-xl bg-[#f5f5f7] text-xs text-gray-500 text-center">
+            Simulation de 7-10 questions · max 20 échanges · {`Plan free : 1 simulation offerte`}
+          </div>
           <button onClick={() => sendMessage("Bonjour, je suis prêt pour l'entretien.")}
-            className="bg-indigo-600 text-white px-8 py-3.5 rounded-2xl font-bold text-sm hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-600/20 cursor-pointer hover:-translate-y-0.5">
+            className="bg-black text-white px-8 py-3.5 rounded-2xl font-semibold text-sm hover:bg-gray-800 transition-all shadow-xl cursor-pointer hover:-translate-y-0.5">
             Commencer la simulation
           </button>
-          <p className="text-[10px] text-gray-300">Feature Pro — Powered by Claude Haiku 4.5</p>
         </motion.div>
       )}
 

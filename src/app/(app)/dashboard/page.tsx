@@ -15,8 +15,8 @@ export default async function DashboardPage() {
 
   const profile = profileRes.data as unknown as Profile | null;
   if (!profile) redirect("/login");
-  if (!profile.experience?.trim()) redirect("/onboarding");
 
+  const needsOnboarding = !profile.experience?.trim();
   const apps = (appsRes.data || []) as unknown as Application[];
   const generated = apps.filter((a) => a.status !== "analyzed").length;
   const interviews = apps.filter((a) => a.status === "interview" || a.status === "hired").length;
@@ -56,6 +56,20 @@ export default async function DashboardPage() {
         <QuickAction href="/templates" icon="🎨" label="Templates CV" desc="50 combinaisons" />
         <QuickAction href="/pricing" icon="💎" label="Mon plan" desc={(profile as unknown as { plan: string }).plan === "free" ? "Upgrade" : (profile as unknown as { plan: string }).plan === "pro" ? "Pro actif" : "Lifetime ∞"} />
       </div>
+
+      {/* ━━━ Onboarding banner ━━━ */}
+      {needsOnboarding && (
+        <div className="flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
+          <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center shrink-0"><span className="text-lg">👋</span></div>
+          <div className="flex-1">
+            <p className="font-bold text-sm text-amber-900">Complète ton profil en 2 min</p>
+            <p className="text-xs text-amber-700">Ajoute ton expérience pour des CV personnalisés.</p>
+          </div>
+          <Link href="/onboarding" className="text-xs bg-amber-500 text-white px-4 py-2 rounded-xl font-bold shrink-0 shadow shadow-amber-500/20">
+            Compléter
+          </Link>
+        </div>
+      )}
 
       {/* ━━━ Credits alert ━━━ */}
       {(profile as unknown as { plan: string }).plan === "free" && ((profile as unknown as { generation_count: number }).generation_count || 0) >= 3 && (
